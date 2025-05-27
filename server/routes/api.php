@@ -19,5 +19,10 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/', function () {
+    return ['API'];
+});
+
+Route::post('/register', [AuthTokenController::class, 'register']);
 Route::post('/login', [AuthTokenController::class, 'login']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthTokenController::class, 'logout']);
