@@ -62,7 +62,7 @@ min-width:100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-
+}
 
 .form-card {
   position: relative;
