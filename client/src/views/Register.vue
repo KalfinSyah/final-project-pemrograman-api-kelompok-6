@@ -11,14 +11,17 @@
   const sendRegisterForm = async () => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/register`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(registerForm.value)
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify(registerForm.value)
         });
         const responseData = await response.json();
         alert(responseData.message);
         if (response.ok) {
-            alert("register success")
+            // alert("register success")
         }
     } catch (error) {
         // console.log(error);
