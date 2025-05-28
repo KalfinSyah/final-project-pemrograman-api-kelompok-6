@@ -13,39 +13,18 @@
         const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/register`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(registerForm.value),
+            body: JSON.stringify(registerForm.value)
         });
         const responseData = await response.json();
         alert(responseData.message);
         if (response.ok) {
-            console.log(responseData.user)
+            alert("register success")
         }
     } catch (error) {
         // console.log(error);
         alert("system error");
     }
   }
-
-//     const sendLoginForm = async (email, password) => {
-//     try {
-//       const response = await fetch("http://127.0.0.1:8000/api/login", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify({
-//           email: email,
-//           password: password
-//         })
-//       });
-//       const responseData = await response.json();
-//       if (response.ok) {
-//         localStorage.setItem("token", responseData.token);
-//         router.push({name: "barang"});
-//       }
-//     } catch (error) {
-//       // console.log(error);
-//       alert("Kesalahan Sistem");
-//     }
-//   }
 
 </script>
 
