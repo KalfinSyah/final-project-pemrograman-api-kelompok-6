@@ -10,20 +10,19 @@
 
   const sendRegisterForm = async () => {
     try {
-        console.log(import.meta.env.VITE_BASE_URL_API)
         const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/register`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(registerForm.value)
-      });
-      const responseData = await response.json();
-      alert(responseData.message);
-      if (response.ok) {
-        console.log(responseData.user)
-      }
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(registerForm.value),
+        });
+        const responseData = await response.json();
+        alert(responseData.message);
+        if (response.ok) {
+            console.log(responseData.user)
+        }
     } catch (error) {
-      // console.log(error);
-      alert("system error");
+        // console.log(error);
+        alert("system error");
     }
   }
 
