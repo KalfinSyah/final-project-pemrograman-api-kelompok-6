@@ -25,4 +25,4 @@ Route::get('/', function () {
 
 Route::post('/register', [AuthTokenController::class, 'register']);
 Route::post('/login', [AuthTokenController::class, 'login']);
-Route::middleware('auth:sanctum')->post('/logout', [AuthTokenController::class, 'logout']);
+Route::post('/logout', [AuthTokenController::class, 'logout'])->middleware('auth:sanctum');

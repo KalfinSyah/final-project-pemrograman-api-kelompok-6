@@ -11,7 +11,8 @@ Proyek ini dibuat sebagai bagian dari tugas mata kuliah **Pemrograman API**, yan
 - MAULANA ADITYA FURQON ARYANDA (22081010310)
 
 ## Teknologi yang Digunakan
-- **Backend**: PHP 
-- **Database**: 
+- **Backend**: PHP
+- **Frontend**: Vue
+- **Database**: MySql
 - **API Style**: RESTful API
-- **Deployment**: 
+- **Deployment**: TBD

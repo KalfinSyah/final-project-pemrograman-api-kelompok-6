@@ -57,7 +57,6 @@ body, html {
 
 
 .bg-wrapper {
-min-width:100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,19 +103,16 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 input[type="text"],
-input[type="email"],
 input[type="password"] {
   padding: 10px 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   border: none;
   border-radius: 6px;
   background-color: #d3d3d3;
   font-size: 14px;
-  color: #000; /* ✅ Tambahkan/ubah ini agar teks input jadi hitam */
 }
-
-
 
 button {
   padding: 10px;
