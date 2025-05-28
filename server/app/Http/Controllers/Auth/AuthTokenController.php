@@ -53,12 +53,12 @@ class AuthTokenController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Buat token login otomatis
-        $token = $user->createToken('api-token')->plainTextToken;
+        // // Buat token login otomatis
+        // $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'message' => 'User registered successfully',
-            'token' => $token,
+            // 'token' => $token,
             'user' => $user,
         ]);
     }
