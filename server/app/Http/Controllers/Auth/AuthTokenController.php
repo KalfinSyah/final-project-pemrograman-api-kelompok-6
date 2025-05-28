@@ -34,7 +34,9 @@ class AuthTokenController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out']);
+        return response()->json([
+            'message' => 'Logged out successfully',
+        ], 200);
     }
 
     public function register(Request $request)
