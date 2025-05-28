@@ -11,7 +11,7 @@ Proyek ini dibuat sebagai bagian dari tugas mata kuliah **Pemrograman API**, yan
 - MAULANA ADITYA FURQON ARYANDA (22081010310)
 
 ## Teknologi yang Digunakan
-- **Backend**: 
+- **Backend**: PHP 
 - **Database**: 
 - **API Style**: RESTful API
 - **Deployment**: 
