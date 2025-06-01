@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->string('marriage_contract_notes', 255);
+            $table->string('reception_notes', 255);
             $table->timestamps();
         });
     }

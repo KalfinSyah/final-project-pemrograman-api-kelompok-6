@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('wedding_rundowns', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rundown')->constrained('reservations')->onDelete('cascade');
             $table->timestamps();
         });
     }
