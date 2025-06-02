@@ -12,7 +12,21 @@ class CalenderController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+
+        if ($user->is_admin) {
+            // Admin bisa melihat semua
+            $calenders = Calender::all();
+        } else {
+            // User biasa hanya melihat tipe tertentu
+            $calenders = Calender::where('calender_name', 'Pelaksanaan Acara')->get();
+        }
+
+        // return response()->json($calenders);
+        return response()->json([
+            'message' => 'Daftar Kegiatan Di Kalender',
+            'data' => $calenders
+        ], 200);
     }
 
     /**
@@ -36,7 +50,12 @@ class CalenderController extends Controller
      */
     public function show(Calender $calender)
     {
-        //
+        $calender->load('reservation');
+
+        return response()->json([
+            'message' => 'Detail Kalender',
+            'data' => $calender
+        ], 200);
     }
 
     /**
