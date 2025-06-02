@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservations', function (Blueprint $table) {
+        Schema::create('calenders', function (Blueprint $table) {
             $table->id();
-            $table->text('marriage_contract_notes');
-            $table->text('reception_notes');
+            $table->enum('calender_name', ['Reservasi Lokasi', 'Pemesanan Katering', 'Koordinasi Staff', 'Pelaksanaan Acara'])->default('Pelaksanaan Acara');
+            $table->date('calender_date');
+            $table->foreignId('reservation_id')->constrained('reservations')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservations');
+        Schema::dropIfExists('calenders');
     }
 };

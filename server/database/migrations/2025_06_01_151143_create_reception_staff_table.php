@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reception_staffs', function (Blueprint $table) {
             $table->id();
             $table->string('staff_name', 255);
-            $table->string('desk', 255);
+            $table->string('jobdesk', 100);
             $table->string('handphone_num', 15);
             $table->timestamps();
         });
