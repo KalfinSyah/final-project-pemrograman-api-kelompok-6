@@ -21,6 +21,11 @@ const router = createRouter({
       name: "register", 
       component: Register
     },
+    {
+      path: "/admin/dashboard",
+      name: "admin-dashboard",
+      component: () => import('../views/admin/Dashboard.vue'),
+    },
   ],
 })
 
