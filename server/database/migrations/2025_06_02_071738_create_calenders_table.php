@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('calender_name', ['Reservasi Lokasi', 'Pemesanan Katering', 'Koordinasi Staff', 'Pelaksanaan Acara'])->default('Pelaksanaan Acara');
             $table->date('calender_date');
+            $table->enum('calender_status', ['Selesai', 'Pending', 'Batal', 'Mundur'])->default('Pending');
             $table->foreignId('reservation_id')->constrained('reservations')->onDelete('cascade');
             $table->timestamps();
         });
