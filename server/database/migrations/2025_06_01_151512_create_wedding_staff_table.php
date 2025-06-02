@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('wedding_staffs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contract_member')->constrained('marriage_contract_staffs')->onDelete('cascade');
-            $table->foreignId('reception_member')->constrained('reception_staff')->onDelete('cascade');
-            $table->foreignId('staff_members')->constrained('reservations')->onDelete('cascade');
+            $table->foreignId('marriage_contract_staff_id')->constrained('marriage_contract_staffs')->onDelete('cascade');
+            $table->foreignId('reception_staff_id')->constrained('reception_staffs')->onDelete('cascade');
+            $table->foreignId('reservation_id')->constrained('reservations')->onDelete('cascade');
             $table->timestamps();
         });
     }
