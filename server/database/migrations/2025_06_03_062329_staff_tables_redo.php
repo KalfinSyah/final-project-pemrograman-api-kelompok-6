@@ -12,6 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('wedding_staffs', function (Blueprint $table) {
+            $table->dropForeign(['marriage_contract_staff_id']);
+            $table->dropForeign(['reception_staff_id']);
+
             $table->dropColumn([
                 'marriage_contract_staff_id',
                 'reception_staff_id'
@@ -25,7 +28,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('wedding_staff_id')->constrained('wedding_staffs')->onDelete('cascade');
             $table->string('staff_name', 255);
-            $table->enum('staff_type', ['Petugas Resepsi', 'Petugas Akad Nikah'])->default('Pelaksanaan Acara');
+            $table->enum('staff_type', ['Petugas Resepsi', 'Petugas Akad Nikah'])->default('Petugas Resepsi');
             $table->string('jobdesk', 100);
             $table->string('description', 100);
             $table->string('handphone_num', 15);
