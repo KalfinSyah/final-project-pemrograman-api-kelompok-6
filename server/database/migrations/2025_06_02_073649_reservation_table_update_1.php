@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('progress');
             $table->decimal('cashflow_in', 15, 2);
             $table->decimal('cashflow_out', 15, 2);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 
@@ -25,7 +26,9 @@ return new class extends Migration
     {
         Schema::table('reservations', function (Blueprint $table) {
             $table->dropColumn([
-                ''
+                'progress',
+                'cashflow_in',
+                'cashflow_out'
             ]);
         });
     }

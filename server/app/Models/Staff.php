@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Event extends Model
+class Staff extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function rundown()
+    public function weddingStaff()
     {
-        return $this->belongsTo(WeddingRundown::class);
+        return $this->belongsTo(WeddingStaff::class);
     }
 }

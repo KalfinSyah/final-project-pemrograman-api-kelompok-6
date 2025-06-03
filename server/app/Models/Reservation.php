@@ -10,6 +10,11 @@ class Reservation extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+    public function customer()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function staffs()
     {
         return $this->hasMany(WeddingStaff::class);
