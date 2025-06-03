@@ -12,7 +12,12 @@ class VendorController extends Controller
      */
     public function index()
     {
-        //
+        $vendors = Vendor::all();
+
+        return response()->json([
+            'message' => 'Daftar Vendor',
+            'data' => $vendors
+        ], 200);
     }
 
     /**
@@ -36,7 +41,12 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        //
+        $vendor->load('reservations');
+
+        return response()->json([
+            'message' => 'Detail Vendor',
+            'data' => $vendor
+        ], 200);
     }
 
     /**

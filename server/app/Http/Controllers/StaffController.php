@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MarriageContractStaff;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 
-class MarriageContractStaffController extends Controller
+class StaffController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class MarriageContractStaffController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MarriageContractStaff $marriageContractStaff)
+    public function show(Staff $staff)
     {
         //
     }
@@ -42,7 +42,7 @@ class MarriageContractStaffController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MarriageContractStaff $marriageContractStaff)
+    public function edit(Staff $staff)
     {
         //
     }
@@ -50,7 +50,7 @@ class MarriageContractStaffController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MarriageContractStaff $marriageContractStaff)
+    public function update(Request $request, Staff $staff)
     {
         //
     }
@@ -58,7 +58,7 @@ class MarriageContractStaffController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MarriageContractStaff $marriageContractStaff)
+    public function destroy(Staff $staff)
     {
         //
     }

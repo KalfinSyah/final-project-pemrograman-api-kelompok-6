@@ -3,7 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CalenderController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\VendorController;
 use App\Http\Controllers\Auth\AuthTokenController;
+use App\Models\Vendor;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +33,9 @@ Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
     Route::post('/calenders', [CalenderController::class, 'store']);
     Route::put('/calenders/{calender}', [CalenderController::class, 'update']);
     Route::delete('/calenders/{calender}', [CalenderController::class, 'destroy']);
+
+    Route::apiResource('reservations', ReservationController::class);
+    Route::apiResource('vendors', VendorController::class);
 });
 
 

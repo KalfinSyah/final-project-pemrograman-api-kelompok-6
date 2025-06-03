@@ -12,7 +12,12 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = Reservation::all();
+
+        return response()->json([
+            'message' => 'Daftar Reservasi',
+            'data' => $reservations
+        ], 200);
     }
 
     /**
@@ -36,7 +41,12 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        $reservation->load('customer', 'staffs', 'rundowns', 'calenders', 'vendors');
+
+        return response()->json([
+            'message' => 'Detail Reservasi',
+            'data' => $reservation
+        ], 200);
     }
 
     /**
