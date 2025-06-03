@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Vendor extends Model
 {
     use HasFactory;
+
+    public function reservations()
+    {
+        return $this->belongsToMany(Reservation::class, 'reservation_vendors');
+    }
 }
