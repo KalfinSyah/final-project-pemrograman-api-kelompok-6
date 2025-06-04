@@ -9,6 +9,7 @@ class WeddingStaff extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+    protected $table = 'wedding_staffs';
 
     public function reservation()
     {
