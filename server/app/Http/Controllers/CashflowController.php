@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reservation;
+use App\Models\Cashflow;
 use Illuminate\Http\Request;
 
-class ReservationController extends Controller
+class CashflowController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $reservations = Reservation::all();
+        // $cashflows = Cashflow::all();
 
-        return response()->json([
-            'message' => 'Daftar Reservasi',
-            'data' => $reservations
-        ], 200);
+        // return response()->json([
+        //     'message' => 'Daftar Cashflow',
+        //     'data' => $cashflows
+        // ], 200);
     }
 
     /**
@@ -39,20 +39,15 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Reservation $reservation)
+    public function show(Cashflow $cashflow)
     {
-        $reservation->load('customer', 'staffs', 'rundowns', 'calenders', 'cashflows', 'vendors');
-
-        return response()->json([
-            'message' => 'Detail Reservasi',
-            'data' => $reservation
-        ], 200);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reservation $reservation)
+    public function edit(Cashflow $cashflow)
     {
         //
     }
@@ -60,7 +55,7 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(Request $request, Cashflow $cashflow)
     {
         //
     }
@@ -68,7 +63,7 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(Cashflow $cashflow)
     {
         //
     }

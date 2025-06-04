@@ -30,6 +30,11 @@ class Reservation extends Model
         return $this->hasMany(Calender::class);
     }
 
+    public function cashflows()
+    {
+        return $this->hasMany(Cashflow::class);
+    }
+
     public function vendors()
     {
         return $this->belongsToMany(Vendor::class, 'reservation_vendors');
