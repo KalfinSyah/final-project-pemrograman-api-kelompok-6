@@ -1,25 +1,32 @@
 <template>
   
-  <div id="nav">
-    <div>Ruang Hati</div>
+<div id="nav">
+  <div>Ruang Hati</div>
+  <ul>
+    <li><a href="#services">services</a></li>
+    <li><a href="#price-list">price list</a></li>
+    <li><a href="#testimonials">testimonials</a></li>
+    <li><a href="#contact-us">contact us</a></li>
+  </ul>
+</div>  
+
+<div id="carousel">
+  <img src="../assets/carousel/1.png" alt="">
+</div>
+
+<div id="content">
+  <div id="services">
+    <h2>Our Services</h2>
     <ul>
-      <li><a href="#home">home</a></li>
-      <li><a href="#services">services</a></li>
-      <li><a href="#price-list">price list</a></li>
-      <li><a href="#testimonials">testimonials</a></li>
-      <li><a href="#contact-us">contact us</a></li>
+      <li>Photoshoot</li>
+      <li>Wedding Organizer</li>
+      <li>Event Organizer</li>
     </ul>
-  </div>  
-
-  <div id="carousel">
-    <img src="../assets/carousel/1.png" alt="">
   </div>
+</div>
 
-  <div id="content">
-
-  </div>
-  
 </template>
+
 
 
 <style scoped>
@@ -58,5 +65,33 @@
 #carousel img {
   width: 100%;
 }
+
+#content {
+  color: #474747;
+  padding: 20px;
+  background-color: #f0f0f0;
+  margin-top: -150px;
+  position: relative;
+  height: 100px;
+  border-top-left-radius: 100% 150px;
+  border-top-right-radius: 100% 150px;
+  height: fit-content;
+}
+
+#services {
+  margin-top: 100px;
+}
+#services h2 {
+  padding-right: 30px;
+}
+#services ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
 
 </style>
