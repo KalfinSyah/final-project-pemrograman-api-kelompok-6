@@ -134,7 +134,7 @@ const selectedService = ref('');
   margin: auto;
 }
 #service-list div:last-child {
-  margin-left: 35px;
+  margin-left: 33px;
 }
 #service-list div:hover {
   transform: translateY(-2px);
