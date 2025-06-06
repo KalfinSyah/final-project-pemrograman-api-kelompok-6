@@ -1,3 +1,12 @@
+<script setup>
+
+import { ref } from 'vue';
+const selectedService = ref('');
+
+</script>
+
+
+
 <template>
   
 <div id="nav">
@@ -17,11 +26,27 @@
 <div id="content">
   <div id="services">
     <h2>Our Services</h2>
-    <ul>
-      <li>Photoshoot</li>
-      <li>Wedding Organizer</li>
-      <li>Event Organizer</li>
-    </ul>
+    
+    <div id="service-list">
+      <div @click="selectedService = 'PS'">Photoshoot</div>
+      <div @click="selectedService = 'WO'">Wedding Organizer</div>
+      <div @click="selectedService = 'EO'">Event Organizer</div>
+    </div>
+
+    <div id="service-details">
+      <div v-if="selectedService === 'PS'">
+        <h3>Photoshoot</h3>
+        <p>We offer professional photoshoot services for various occasions.</p>
+      </div>
+      <div v-else-if="selectedService === 'WO'">
+        <h3>Wedding Organizer</h3>
+        <p>Let us help you plan your perfect wedding day.</p>
+      </div>
+      <div v-else-if="selectedService === 'EO'">
+        <h3>Event Organizer</h3>
+        <p>We organize events that leave lasting impressions.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -62,8 +87,14 @@
   color: #e3e3e3;
 }
 
+#carousel {
+  height: 900px;
+  overflow: hidden;
+}
 #carousel img {
   width: 100%;
+  height: 100%;
+  object-fit: cover; 
 }
 
 #content {
@@ -82,16 +113,36 @@
   margin-top: 100px;
 }
 #services h2 {
-  padding-right: 30px;
+  margin-bottom: 25px;
 }
-#services ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: space-evenly;
+#service-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-self: center;
+}
+#service-list div {
+  background-color: white;
+  padding: 10px 20px;
+  text-align: center;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 18px;
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  width: fit-content;
+  margin: auto;
+}
+#service-list div:last-child {
+  margin-left: 35px;
+}
+#service-list div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-
+#service-details {
+  margin-top: 50px;
+}
 
 </style>
