@@ -2,7 +2,7 @@
 
 import { onMounted, ref } from 'vue';
 
-const selectedService = ref('PS');
+const selectedService = ref('PS'); 
 const couruselIndex = ref(0);
 const isDragging = ref(false);
 const startX = ref(0);
@@ -51,21 +51,17 @@ const pricelist = [
 function nextCoursel() {
   couruselIndex.value = (couruselIndex.value + 1) % courusel.length;
 }
-
 function onMouseDown(e) {
   isDragging.value = true;
   startX.value = e.pageX - e.currentTarget.offsetLeft;
   scrollLeft.value = e.currentTarget.scrollLeft;
 }
-
 function onMouseLeave() {
   isDragging.value = false;
 }
-
 function onMouseUp() {
   isDragging.value = false;
 }
-
 function onMouseMove(e) {
   if (!isDragging.value) return;
   e.preventDefault();
@@ -73,7 +69,6 @@ function onMouseMove(e) {
   const walk = (x - startX.value) * 1;
   e.currentTarget.scrollLeft = scrollLeft.value - walk;
 }
-
 function startAutoScroll(elementRef, speed = 1) {
   if (!elementRef.value) return;
 
@@ -94,10 +89,9 @@ function startAutoScroll(elementRef, speed = 1) {
   requestAnimationFrame(autoScroll);
 }
 
-
 onMounted(() => {
   setInterval(nextCoursel, 6000);
-  startAutoScroll(pricelistContainer, 1);
+  startAutoScroll(pricelistContainer, 0.5);
 });
 
 </script>
@@ -127,36 +121,29 @@ onMounted(() => {
     <h2>Our Services</h2>
     
     <div id="service-list">
-      <div @click="selectedService = 'PS'"  :class="{ 'active-service' : selectedService === 'PS' }">Photoshoot</div>
-      <div @click="selectedService = 'WO'"  :class="{ 'active-service' : selectedService === 'WO' }">Wedding Organizer</div>
-      <div @click="selectedService = 'EO'"  :class="{ 'active-service' : selectedService === 'EO' }">Event Organizer</div>
+      <div 
+      @click="selectedService = 'PS'"  
+      :class="{ 'active-service' : selectedService === 'PS' }"
+      :style="selectedService === 'PS' ? { backgroundColor: 'black', color: 'white' } : {}">Photoshoot</div>
+
+      <div 
+      @click="selectedService = 'WO'"  
+      :class="{ 'active-service' : selectedService === 'WO' }"
+      :style="selectedService === 'WO' ? { backgroundColor: 'black', color: 'white' } : {}">Wedding Organizer</div>
+      
+      <div 
+      @click="selectedService = 'EO'"  
+      :class="{ 'active-service' : selectedService === 'EO' }" 
+      :style="selectedService === 'EO' ? { backgroundColor: 'black', color: 'white' } : {}">Event Organizer</div>
     </div>
 
     <div id="service-details">
-      <div id="service-details-container" v-if="selectedService === 'WO'">
-        <img id="service-img" :src="services.WO.imgPath" alt="Service Image">
+      <div id="service-details-container">
+        <img id="service-img" :src="services[selectedService].imgPath" alt="Service Image">
         <div id="service-desc">
-          <h3>{{ services.WO.title }}</h3>
+          <h3>{{ services[selectedService].title }}</h3>
           <div>
-            <p>{{ services.WO.desc }}</p>
-          </div>
-        </div>
-      </div>
-      <div id="service-details-container" v-else-if="selectedService === 'EO'">
-        <img id="service-img" :src="services.EO.imgPath" alt="Service Image">
-        <div id="service-desc">
-          <h3>{{ services.EO.title }}</h3>
-          <div>
-            <p>{{ services.EO.desc }}</p>
-          </div>
-        </div>
-      </div>
-      <div id="service-details-container" v-else="selectedService === 'PS'">
-        <img id="service-img" :src="services.PS.imgPath" alt="Service Image">
-        <div id="service-desc">
-          <h3>{{ services.PS.title }}</h3>
-          <div>
-            <p>{{ services.PS.desc }}</p>
+            <p>{{ services[selectedService].desc }}</p>
           </div>
         </div>
       </div>
