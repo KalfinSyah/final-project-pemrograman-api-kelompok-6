@@ -1,8 +1,38 @@
 <script setup>
 
-import { ref } from 'vue';
-const selectedService = ref('PS');
+import { onMounted, ref } from 'vue';
 
+const selectedService = ref('PS');
+const services = {
+  PS: {
+    imgPath: new URL('../assets/service-PS.jpg', import.meta.url).href,
+    title: 'Photoshoot',
+    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus iure, laboriosam maiores quo sed voluptate tempora ratione distinctio velit magni rerum officiis sapiente aut omnis eaque libero. Alias, delectus sunt!',
+  },
+  WO: {
+    imgPath: new URL('../assets/service-WO.jpg', import.meta.url).href,
+    title: 'Wedding Organizer',
+    desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, ullam ab. Minima cumque esse sunt nisi nulla, repudiandae consequatur veniam, ex tempora saepe optio totam ut maxime eligendi dolor impedit? Beatae possimus alias autem odio ipsam nulla! Minus rem iure fugiat facilis corrupti cumque sunt sint error, tempore quis alias vero deserunt excepturi aliquam quibusdam eos, animi nobis totam dignissimos.',
+  },
+  EO: {
+    imgPath: new URL('../assets/service-EO.jpg', import.meta.url).href,
+    title: 'Event Organizer',
+    desc: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid, ad asperiores! Earum, explicabo numquam quas itaque a ut voluptas modi harum illo similique exercitationem reiciendis! Ipsum ab blanditiis quam est!',
+  }
+};
+const couruselIndex = ref(0);
+const courusel = [
+  new URL('../assets/carousel/1.png', import.meta.url).href,
+  new URL('../assets/carousel/2.png', import.meta.url).href,
+];
+
+function nextCoursel() {
+  couruselIndex.value = (couruselIndex.value + 1) % courusel.length;
+}
+
+onMounted(() => {
+  setInterval(nextCoursel, 6000);
+});
 </script>
 
 
@@ -20,7 +50,9 @@ const selectedService = ref('PS');
 </div>  
 
 <div id="carousel">
-  <img src="../assets/carousel/1.png" alt="">
+  <transition name="fade" mode="out-in">
+    <img :key="couruselIndex" :src="courusel[couruselIndex]" alt="carousel image" />
+  </transition>
 </div>
 
 <div id="content">
@@ -35,35 +67,29 @@ const selectedService = ref('PS');
 
     <div id="service-details">
       <div id="service-details-container" v-if="selectedService === 'WO'">
-        <img id="service-img" src="../assets/services/WO.jpg" alt="Service Image">
+        <img id="service-img" :src="services.WO.imgPath" alt="Service Image">
         <div id="service-desc">
-          <h3>Wedding Organizer</h3>
+          <h3>{{ services.WO.title }}</h3>
           <div>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, ullam ab. Minima cumque esse sunt nisi nulla, repudiandae consequatur veniam, ex tempora saepe optio totam ut maxime eligendi dolor impedit?
-              Beatae possimus alias autem odio ipsam nulla! Minus rem iure fugiat facilis corrupti cumque sunt sint error, tempore quis alias vero deserunt excepturi aliquam quibusdam eos, animi nobis totam dignissimos.
-              Architecto maiores vel ullam cumque commodi unde voluptate a blanditiis, similique quod, nam praesentium incidunt. Repellat cum natus veritatis! Aspernatur fuga porro dolorum corrupti culpa quisquam quod est blanditiis quae?
-              Odit nihil, ipsa totam sequi molestiae dignissimos quasi, voluptas sapiente nemo blanditiis quas quos dolores iure ullam consequatur autem, in similique. Esse, temporibus doloremque perferendis repellendus officiis alias nemo provident.
-              Aut animi ea fugit at officia minus, fugiat ipsam, repellendus inventore reprehenderit aspernatur. Dolore sed repudiandae labore. Culpa, dolorum delectus, praesentium, quod assumenda minus ipsam quisquam odio earum ab eligendi!
-            </p>
+            <p>{{ services.WO.desc }}</p>
           </div>
         </div>
       </div>
       <div id="service-details-container" v-else-if="selectedService === 'EO'">
-        <img id="service-img" src="../assets/services/EO.jpg" alt="Service Image">
+        <img id="service-img" :src="services.EO.imgPath" alt="Service Image">
         <div id="service-desc">
-          <h3>Event Organizer</h3>
+          <h3>{{ services.EO.title }}</h3>
           <div>
-              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid, ad asperiores! Earum, explicabo numquam quas itaque a ut voluptas modi harum illo similique exercitationem reiciendis! Ipsum ab blanditiis quam est!</p>
+            <p>{{ services.EO.desc }}</p>
           </div>
         </div>
       </div>
       <div id="service-details-container" v-else="selectedService === 'PS'">
-        <img id="service-img" src="../assets/services/PS.jpg" alt="Service Image">
+        <img id="service-img" :src="services.PS.imgPath" alt="Service Image">
         <div id="service-desc">
-          <h3>Photoshoot</h3>
+          <h3>{{ services.PS.title }}</h3>
           <div>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus iure, laboriosam maiores quo sed voluptate tempora ratione distinctio velit magni rerum officiis sapiente aut omnis eaque libero. Alias, delectus sunt!</p>
+            <p>{{ services.PS.desc }}</p>
           </div>
         </div>
       </div>
@@ -111,6 +137,7 @@ const selectedService = ref('PS');
 #carousel {
   height: 900px;
   overflow: hidden;
+  position: relative;
 }
 #carousel img {
   width: 100%;
@@ -176,7 +203,7 @@ const selectedService = ref('PS');
   grid-template-areas: 
   'img desc desc'
   'img desc desc';
-  border-radius: 20px;
+  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
@@ -211,5 +238,20 @@ const selectedService = ref('PS');
   transform: translateY(-2px);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 2.5s cubic-bezier(0.25, 1, 0.5, 1), transform 2.5s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: scale(1.2);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(1);
+}
+
 
 </style>
