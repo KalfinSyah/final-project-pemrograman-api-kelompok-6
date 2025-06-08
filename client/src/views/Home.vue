@@ -3,36 +3,103 @@
 import { onMounted, ref } from 'vue';
 
 const selectedService = ref('PS');
+const couruselIndex = ref(0);
+const isDragging = ref(false);
+const startX = ref(0);
+const scrollLeft = ref(0);
+const pricelistContainer = ref(null);
+
 const services = {
   PS: {
-    imgPath: new URL('../assets/service-PS.jpg', import.meta.url).href,
+    imgPath: new URL('../assets/our-service/service-PS.jpg', import.meta.url).href,
     title: 'Photoshoot',
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus iure, laboriosam maiores quo sed voluptate tempora ratione distinctio velit magni rerum officiis sapiente aut omnis eaque libero. Alias, delectus sunt!',
   },
   WO: {
-    imgPath: new URL('../assets/service-WO.jpg', import.meta.url).href,
+    imgPath: new URL('../assets/our-service/service-WO.jpg', import.meta.url).href,
     title: 'Wedding Organizer',
     desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, ullam ab. Minima cumque esse sunt nisi nulla, repudiandae consequatur veniam, ex tempora saepe optio totam ut maxime eligendi dolor impedit? Beatae possimus alias autem odio ipsam nulla! Minus rem iure fugiat facilis corrupti cumque sunt sint error, tempore quis alias vero deserunt excepturi aliquam quibusdam eos, animi nobis totam dignissimos.',
   },
   EO: {
-    imgPath: new URL('../assets/service-EO.jpg', import.meta.url).href,
+    imgPath: new URL('../assets/our-service/service-EO.jpg', import.meta.url).href,
     title: 'Event Organizer',
     desc: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid, ad asperiores! Earum, explicabo numquam quas itaque a ut voluptas modi harum illo similique exercitationem reiciendis! Ipsum ab blanditiis quam est!',
   }
 };
-const couruselIndex = ref(0);
 const courusel = [
   new URL('../assets/carousel/1.png', import.meta.url).href,
   new URL('../assets/carousel/2.png', import.meta.url).href,
+];
+const pricelist = [
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: 'AKAD RESEPSI',
+    price: 'IDR 6.500.000',
+  },
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: 'AKAD RESEPSI VIP',
+    price: 'IDR 10.500.000',
+  },
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: 'ENGAGEMENT',
+    price: 'IDR 3.500.000',
+  }
 ];
 
 function nextCoursel() {
   couruselIndex.value = (couruselIndex.value + 1) % courusel.length;
 }
 
+function onMouseDown(e) {
+  isDragging.value = true;
+  startX.value = e.pageX - e.currentTarget.offsetLeft;
+  scrollLeft.value = e.currentTarget.scrollLeft;
+}
+
+function onMouseLeave() {
+  isDragging.value = false;
+}
+
+function onMouseUp() {
+  isDragging.value = false;
+}
+
+function onMouseMove(e) {
+  if (!isDragging.value) return;
+  e.preventDefault();
+  const x = e.pageX - e.currentTarget.offsetLeft;
+  const walk = (x - startX.value) * 1;
+  e.currentTarget.scrollLeft = scrollLeft.value - walk;
+}
+
+function startAutoScroll(elementRef, speed = 1) {
+  if (!elementRef.value) return;
+
+  const scrollWidthHalf = elementRef.value.scrollWidth / 2;
+
+  function autoScroll() {
+    if (!elementRef.value) return;
+
+    elementRef.value.scrollLeft += speed;
+
+    if (elementRef.value.scrollLeft >= scrollWidthHalf) {
+      elementRef.value.scrollLeft = 0;
+    }
+
+    requestAnimationFrame(autoScroll);
+  }
+
+  requestAnimationFrame(autoScroll);
+}
+
+
 onMounted(() => {
   setInterval(nextCoursel, 6000);
+  startAutoScroll(pricelistContainer, 1);
 });
+
 </script>
 
 
@@ -43,7 +110,7 @@ onMounted(() => {
   <div>Ruang Hati</div>
   <ul>
     <li><a href="#services">services</a></li>
-    <li><a href="#price-list">price list</a></li>
+    <li><a href="#pricelist">pricelist</a></li>
     <li><a href="#testimonials">testimonials</a></li>
     <li><a href="#contact-us">contact us</a></li>
   </ul>
@@ -94,6 +161,36 @@ onMounted(() => {
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="pricelist">
+    <h2>Pricelist</h2>
+    <div id="pricelist-container"
+      ref="pricelistContainer"
+      @mousedown="onMouseDown"
+      @mouseup="onMouseUp"
+      @mouseleave="onMouseLeave"
+      @mousemove="onMouseMove">
+      <div class="pricelist-card" v-for="item in pricelist" :key="item.title">
+        <div class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.price }}</p>
+        </div>
+      </div>
+
+      <!-- duplicated items to create loop -->
+      <div class="pricelist-card" v-for="item in pricelist" :key="item.title + '-clone'">
+        <div class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.price }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="testimonials">
+    <h2>Testimonials</h2>
+    <p>Coming soon...</p>
   </div>
 </div>
 
@@ -232,6 +329,48 @@ onMounted(() => {
   text-align: justify;
   height: 70%;
   overflow: auto;
+}
+
+#pricelist {
+  margin-top: 150px;
+  height: 290px;
+  text-align: center;
+}
+
+
+#pricelist-container {
+  height: 100%;
+  overflow-x: auto;
+  gap: 50px;
+  display: flex;
+  scrollbar-width: none;
+  padding: 20px;
+}
+
+#testimonials {
+  margin-top: 200px;
+} 
+
+.pricelist-card {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.pricelist-details {
+  height: 100%;
+  width: 490px;
+  border-radius: 10px;
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.pricelist-details h3 {
+  font-weight: 500;
+  margin: 0 auto 0 auto;
+}
+.pricelist-details p {
+  margin: 5px auto 0 auto;
 }
 
 .active-service {
