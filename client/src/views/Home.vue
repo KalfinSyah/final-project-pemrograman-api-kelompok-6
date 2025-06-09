@@ -8,6 +8,7 @@ const isDragging = ref(false);
 const startX = ref(0);
 const scrollLeft = ref(0);
 const pricelistContainer = ref(null);
+const priceListPopup = ref({ isVisible: false, data: null });
 
 const services = {
   PS: {
@@ -88,6 +89,10 @@ function startAutoScroll(elementRef, speed = 1) {
 
   requestAnimationFrame(autoScroll);
 }
+function setPriceListPopup(isVisible, data = null) {
+  priceListPopup.value.isVisible = isVisible;
+  priceListPopup.value.data = data;
+}
 
 onMounted(() => {
   setInterval(nextCoursel, 6000);
@@ -158,8 +163,9 @@ onMounted(() => {
       @mouseup="onMouseUp"
       @mouseleave="onMouseLeave"
       @mousemove="onMouseMove">
+
       <div class="pricelist-card" v-for="item in pricelist" :key="item.title">
-        <div class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+        <div @click="setPriceListPopup(true, item)" class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
           <h3>{{ item.title }}</h3>
           <p>{{ item.price }}</p>
         </div>
@@ -167,10 +173,41 @@ onMounted(() => {
 
       <!-- duplicated items to create loop -->
       <div class="pricelist-card" v-for="item in pricelist" :key="item.title + '-clone'">
-        <div class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+        <div @click="setPriceListPopup(true, item)" class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
           <h3>{{ item.title }}</h3>
           <p>{{ item.price }}</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="priceListPopup.isVisible" id="pricelist-popup">
+      <div id="content-list-app-item-details-bg">
+        <div id="content-list-app-item-details">
+          <div>
+            <span @click="setPriceListPopup(false)" id="closeDetails">✖</span>
+          </div>
+          <div>
+            <img :src="priceListPopup.data.imgPath" :alt="priceListPopup.data.title">
+          </div>
+          <hr>
+          <div>
+            <p>
+              <b id="title">{{ priceListPopup.data.title }}</b>
+              <!-- ${data.desc} -->
+            </p>
+            <p id="minimum-system-requirements">
+              Minimum System Requirements
+            </p>
+            <ul>
+              <!-- <li><b>OS</b> : ${data.sysReq.os}</li>
+              <li><b>RAM</b> : ${data.sysReq.ram}</li>
+              <li><b>CPU</b> : ${data.sysReq.cpu}</li>
+              <li><b>GPU</b> : ${data.sysReq.gpu}</li>
+              <li><b>Disk Space</b> : ${data.sysReq.diskSpace}</li> -->
+            </ul>
+            <!-- <a id="go-to-orinigal-site" href="${data.downloadLink}" target="blank">Go to original site to download >></a> -->
+          </div>
       </div>
     </div>
   </div>
@@ -247,6 +284,7 @@ onMounted(() => {
 #services h2 {
   margin-bottom: 25px;
 }
+
 #service-list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -304,13 +342,11 @@ onMounted(() => {
   height: 100%;
   overflow: hidden;
 }
-
 #service-desc h3 {
   width: fit-content;
   margin-top: 40px;
   margin-left: 40px;
 }
-
 #service-desc div {
   margin: 20px 40px 20px 40px;
   text-align: justify;
@@ -338,10 +374,22 @@ onMounted(() => {
   margin-top: 200px;
 } 
 
+#pricelist-popup {
+  color: wheat;
+}
+
+/* ------------------------------------------------------------- */
+
+.active-service {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .pricelist-card {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
+
 .pricelist-details {
   height: 100%;
   width: 490px;
@@ -360,10 +408,7 @@ onMounted(() => {
   margin: 5px auto 0 auto;
 }
 
-.active-service {
-  transform: translateY(-2px);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+/* ------------------------------------------------------------- */
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity 2.5s cubic-bezier(0.25, 1, 0.5, 1), transform 2.5s ease;
@@ -378,6 +423,5 @@ onMounted(() => {
   opacity: 0;
   transform: scale(1);
 }
-
 
 </style>
