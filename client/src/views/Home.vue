@@ -29,7 +29,8 @@ const services = {
 };
 const courusel = [
   new URL('../assets/carousel/1.png', import.meta.url).href,
-  new URL('../assets/carousel/2.png', import.meta.url).href,
+  new URL('../assets/carousel/2.jpg', import.meta.url).href,
+  new URL('../assets/carousel/3.png', import.meta.url).href,
 ];
 const pricelist = [
   {
