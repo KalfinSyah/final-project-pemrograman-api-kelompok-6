@@ -34,19 +34,94 @@ const courusel = [
 const pricelist = [
   {
     imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: 'ENGAGEMENT',
+    price: 'IDR. 3.500.000',
+    details: `
+    1 Project manager.
+    3 Crew on duty with HT.
+    Unlimited konsultasi online.
+    1x online meeting vendor dengan klien.
+    1x meeting dengan keluarga.
+    Konsultasi konsep acara.
+    Guidebook.
+    Property games.
+    `,
+  },
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: 'AKAD INTIMATE',
+    price: 'IDR. 4.000.000',
+    details: `
+    1 Project Manager.
+    4 Crew onduty with HT.
+    Unlimited konsultasi online.
+    1 x TM klien dengan vendor.
+    Konsultasi konsep acara.
+    5 cetak Guidebook.
+    1x meeting WOdengan
+    keluarga.
+    Handle loading decoration.
+    Free buku tamu & ballpoint.
+    `,
+  },
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
+    title: ' RESEPSI ONLY',
+    price: 'IDR. 6.000.000',
+    details: `
+    1 Project Manager.
+    6 Crew onduty with HT.
+    Unlimited konsultasi online.
+    1 x TM klien dengan vendor.
+    Konsultasi konsep acara.
+    10 cetak Guidebook.
+    1x meeting WO dengan keluarga.
+    Pendampingan loading dekor.
+    Pendampingan fitting, testfood,
+    survey lokasi,prewed (Sby & Sda).
+    Free buku tamu & ballpoint.
+    Free pengaturan acara panggih.
+    Free 2 hadiah games.
+    `,
+  },
+  {
+    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
     title: 'AKAD RESEPSI',
-    price: 'IDR 6.500.000',
+    price: 'IDR. 6.500.000',
+    details: `
+    1 Project Manager.
+    8 Crew with HT.
+    Unlimited konsultasi.
+    1x TM klien dengan vendor.
+    Konsultasi konsep acara.
+    10 guide book cetak.
+    1x meeting klien dengan WO.
+    Pendampingan loading dekor. 
+    Pendampingan fitting, testfood & survey lokasi.
+    Free buku tamu & ballpoint
+    Free pembaturan acara panggih - Free 2 hadiah games.
+    `,
   },
   {
     imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
     title: 'AKAD RESEPSI VIP',
-    price: 'IDR 10.500.000',
+    price: 'IDR. 10.500.000',
+    details: `
+    1 Project Manager.
+    15 Crew onduty with HT.
+    Unlimited konsultasi online.
+    1 x TM klien dengan vendor.
+    Konsultasi konsep acara.
+    10 cetak Guidebook.
+    1x meeting WO dengan keluarga.
+    Pendampingan loading dekor.
+    Pendampingan fitting, testfood,
+    survey lokasi,prewed (Sby & Sda).
+    Free buku tamu & ballpoint.
+    Free pengaturan acara panggih.
+    Free 2 hadiah games.
+    `,
   },
-  {
-    imgPath: new URL('../assets/pricelist/1.png', import.meta.url).href,
-    title: 'ENGAGEMENT',
-    price: 'IDR 3.500.000',
-  }
 ];
 
 function nextCoursel() {
@@ -181,39 +256,31 @@ onMounted(() => {
     </div>
   </div>
 
-  <div v-if="priceListPopup.isVisible" id="pricelist-popup">
-      <div id="content-list-app-item-details-bg">
-        <div id="content-list-app-item-details">
-          <div>
-            <span @click="setPriceListPopup(false)" id="closeDetails">✖</span>
-          </div>
-          <div>
-            <img :src="priceListPopup.data.imgPath" :alt="priceListPopup.data.title">
-          </div>
-          <hr>
-          <div>
-            <p>
-              <b id="title">{{ priceListPopup.data.title }}</b>
-              <!-- ${data.desc} -->
-            </p>
-            <p id="minimum-system-requirements">
-              Minimum System Requirements
-            </p>
-            <ul>
-              <!-- <li><b>OS</b> : ${data.sysReq.os}</li>
-              <li><b>RAM</b> : ${data.sysReq.ram}</li>
-              <li><b>CPU</b> : ${data.sysReq.cpu}</li>
-              <li><b>GPU</b> : ${data.sysReq.gpu}</li>
-              <li><b>Disk Space</b> : ${data.sysReq.diskSpace}</li> -->
-            </ul>
-            <!-- <a id="go-to-orinigal-site" href="${data.downloadLink}" target="blank">Go to original site to download >></a> -->
-          </div>
+  <div v-if="priceListPopup.isVisible" id="pricelist-popup" @click="setPriceListPopup(false)">
+    <div id="pricelist-popup-details" @click.stop>
+      <div :style="{ backgroundImage: `url(${priceListPopup.data.imgPath})` }">
+        <span @click="setPriceListPopup(false)">✖</span>
+      </div>
+      <hr>
+      <div>
+        <h3 id="pricelist-popup-details-title">
+          {{ priceListPopup.data.title }}
+        </h3>
+        <h4>{{ priceListPopup.data.price }}</h4>
+        <p v-html="priceListPopup.data.details.replace(/\n/g, '<br>')"></p>
+   
+        <a href="#contact-us" @click="setPriceListPopup(false)">Contact Us</a>
       </div>
     </div>
   </div>
 
   <div id="testimonials">
     <h2>Testimonials</h2>
+    <p>Coming soon...</p>
+  </div>
+
+  <div id="contact-us">
+    <h2>Contact Us</h2>
     <p>Coming soon...</p>
   </div>
 </div>
@@ -360,7 +427,6 @@ onMounted(() => {
   text-align: center;
 }
 
-
 #pricelist-container {
   height: 100%;
   overflow-x: auto;
@@ -375,7 +441,88 @@ onMounted(() => {
 } 
 
 #pricelist-popup {
-  color: wheat;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px); 
+    display: grid;
+    height: 100vh;
+    left: 0;
+    pointer-events: auto;
+    position: fixed;
+    place-items: center;
+    top: 0;
+    width: 100vw;
+    z-index: 9999; 
+}
+
+#pricelist-popup-details {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: popupFadeIn 0.3s ease-out;
+    border-radius: 10px;
+    height: 700px;
+    margin: auto;
+    overflow: hidden;
+    width: 600px;
+    flex-direction: column;
+}
+
+#pricelist-popup-details > :first-child {
+    padding: 10px 15px 0 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: right;
+    height: 300px;
+}
+
+#pricelist-popup-details > :first-child > :first-child {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#pricelist-popup-details hr {
+    height: 2px;
+    background-color: black;
+    border: none;
+    margin: 0;
+}
+
+#pricelist-popup-details > :last-child {
+    overflow-y: auto;
+    height: 353px;
+    padding: 5px 30px 30px 30px;
+    scrollbar-width: thin;         
+    scrollbar-color: #999 #f0f0f0;   
+}
+
+#pricelist-popup-details > div:last-child > p:first-of-type {
+    margin-top: -20px;
+    text-align: center;
+}
+
+#pricelist-popup-details > div:last-child > a {
+  display: inline-block;
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+#pricelist-popup-details > div:last-child > a:hover {
+  background-color: #222;
+}
+
+#pricelist-popup-details-title {
+    font-weight: bolder;
+    margin-bottom: -15px;
 }
 
 /* ------------------------------------------------------------- */
@@ -388,6 +535,7 @@ onMounted(() => {
 .pricelist-card {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .pricelist-details {
@@ -422,6 +570,17 @@ onMounted(() => {
 .fade-leave-to {
   opacity: 0;
   transform: scale(1);
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 </style>
