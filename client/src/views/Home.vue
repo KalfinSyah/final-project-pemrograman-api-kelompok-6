@@ -1,6 +1,9 @@
 <script setup>
 
 import { onMounted, ref, watchEffect } from 'vue';
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 
 const selectedService = ref('PS'); 
 const couruselIndex = ref(0);
@@ -10,6 +13,43 @@ const scrollLeft = ref(0);
 const pricelistContainer = ref(null);
 const priceListPopup = ref({ isVisible: false, data: null });
 const indexTestimonial = ref(0);
+const calendarOptions = ref({
+  plugins: [dayGridPlugin, interactionPlugin],
+  initialView: 'dayGridMonth',
+  dayMaxEventRows: true,
+  views: {
+    timeGrid: {
+      dayMaxEventRows: 3
+    }
+  },
+  events: [
+    { title: 'event 1', date: '2025-06-13', description: 'Description for event 1' },
+    { title: 'event 2', date: '2025-06-13', description: 'Description for event 2' },
+    { title: 'event 3', date: '2025-06-13', description: 'Description for event 3' },
+    { title: 'event 4', date: '2025-06-13', description: 'Description for event 4' },
+    { title: 'event 5', date: '2025-06-13', description: 'Description for event 5' },
+    { title: 'event 6', date: '2025-06-13', description: 'Description for event 6' },
+    { title: 'event 7', date: '2025-06-13', description: 'Description for event 7' },
+    { title: 'event 8', date: '2025-06-13', description: 'Description for event 8' },
+  ],
+  
+  locale: 'id',
+  headerToolbar: {
+    today: 'Hari Ini',
+  },
+  // eventContent: function(arg) {
+  //   let eventTitle = document.createElement('b');
+  //   eventTitle.innerHTML = arg.event.title;
+
+  //   let eventDescription = document.createElement('div');
+  //   eventDescription.innerHTML = arg.event.extendedProps.description;
+  //   eventDescription.style.fontSize = '12px';
+  //   eventDescription.style.color = '#666';
+
+  //   let arrayOfDomNodes = [ eventTitle, eventDescription ];
+  //   return { domNodes: arrayOfDomNodes }
+  // }
+})
 
 const services = {
   PS: {
@@ -325,7 +365,10 @@ watchEffect(() => {
 
   <div id="schedule">
     <h2>Schedule</h2>
-    <p>Coming soon...</p>
+
+    <div>
+      <FullCalendar :options="calendarOptions" />
+    </div>
   </div>
 
   <div id="contact-us">
@@ -388,7 +431,7 @@ watchEffect(() => {
 #content {
   color: #474747;
   background-color: #f0f0f0;
-  margin-top: -150px;
+  margin-top: -170px;
   position: relative;
   border-top-left-radius: 100% 150px;
   border-top-right-radius: 100% 150px;
@@ -628,32 +671,39 @@ watchEffect(() => {
   margin-top: 100px;
 }
 
+#schedule div {
+  width: 600px;
+  max-width: 1000px;
+  height: 600px;
+  margin: auto;
+}
+
 #contact-us {
   margin-top: 100px;
+  padding-bottom: 20px;
 }
 
 #contact-us div {
   background-color: #585B56;
-  margin: 20px auto 20px;
+  margin: auto;
   width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  padding: 15px 15px 15px 15px;
+  gap: 10px;
+  padding: 0px 15px 0px 15px;
   border-radius: 9999px;
   cursor: pointer;
 }
 
 #contact-us div img {
-  width: 50px;
-  height: 50px;
+  width: 32px;
+  height: 32px;
 }
 
 #contact-us div p {
   color: whitesmoke;
   font-weight: 500;
-  font-size: 18px;
 }
 
 /* ------------------------------------------------------------- */
