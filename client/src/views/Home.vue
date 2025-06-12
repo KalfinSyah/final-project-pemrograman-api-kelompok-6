@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 
 const selectedService = ref('PS'); 
 const couruselIndex = ref(0);
@@ -9,6 +9,7 @@ const startX = ref(0);
 const scrollLeft = ref(0);
 const pricelistContainer = ref(null);
 const priceListPopup = ref({ isVisible: false, data: null });
+const indexTestimonial = ref(0);
 
 const services = {
   PS: {
@@ -124,6 +125,28 @@ const pricelist = [
     `,
   },
 ];
+const testimonials = [
+  {
+    imgPath: new URL('../assets/profile/1.jpg', import.meta.url).href,
+    username: 'username1',
+    comment: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/2.jpg', import.meta.url).href,
+    username: 'username2',
+    comment: 'Lorem kasum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/3.jpg', import.meta.url).href,
+    username: 'username3',
+    comment: 'Lorem wesum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/4.jpg', import.meta.url).href,
+    username: 'username4',
+    comment: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!, Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!",
+  },
+];
 
 function nextCoursel() {
   couruselIndex.value = (couruselIndex.value + 1) % courusel.length;
@@ -173,6 +196,14 @@ function setPriceListPopup(isVisible, data = null) {
 onMounted(() => {
   setInterval(nextCoursel, 6000);
   startAutoScroll(pricelistContainer, 0.5);
+});
+
+watchEffect(() => {
+  if (indexTestimonial.value < 0) {
+    indexTestimonial.value = testimonials.length - 1;
+  } else if (indexTestimonial.value >= testimonials.length) {
+    indexTestimonial.value = 0;
+  }
 });
 
 </script>
@@ -276,8 +307,19 @@ onMounted(() => {
   </div>
 
   <div id="testimonials">
-    <h2>Testimonials</h2>
-    <p>Coming soon...</p>
+    <div>
+      <h2>Testimonials</h2>
+      <p>from happy, delighted couples</p>
+    </div>
+    <div>
+      <p @click="indexTestimonial--" >🡨</p>
+      <p>{{ testimonials[indexTestimonial].comment }}</p>
+      <p @click="indexTestimonial++" >🡪</p>
+    </div>
+    <div>
+      <img :src="testimonials[indexTestimonial].imgPath" alt="profile picture">
+      <p>{{testimonials[indexTestimonial].username}}</p>
+    </div>
   </div>
 
   <div id="contact-us">
@@ -324,7 +366,7 @@ onMounted(() => {
 }
 
 #carousel {
-  height: 900px;
+  height: 750px;
   overflow: hidden;
   position: relative;
 }
@@ -336,11 +378,9 @@ onMounted(() => {
 
 #content {
   color: #474747;
-  padding: 20px;
   background-color: #f0f0f0;
   margin-top: -150px;
   position: relative;
-  height: 100px;
   border-top-left-radius: 100% 150px;
   border-top-right-radius: 100% 150px;
   height: fit-content;
@@ -350,6 +390,7 @@ onMounted(() => {
   margin-top: 100px;
 }
 #services h2 {
+  padding-top: 100px;
   margin-bottom: 25px;
 }
 
@@ -437,10 +478,6 @@ onMounted(() => {
   padding: 20px;
 }
 
-#testimonials {
-  margin-top: 200px;
-} 
-
 #pricelist-popup {
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(1px); 
@@ -524,6 +561,63 @@ onMounted(() => {
 #pricelist-popup-details-title {
     font-weight: bolder;
     margin-bottom: -15px;
+}
+
+#testimonials {
+  margin-top: 200px;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  background-color: #585B56;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} 
+
+#testimonials div:first-child h2 {
+  color: white;
+}
+
+#testimonials div:first-child p {
+  color: rgb(195, 195, 195);
+  text-align: center;
+  margin-top: -10px;
+}
+
+#testimonials > div:nth-of-type(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(227, 227, 227);
+  gap: 100px;
+}
+
+#testimonials > div:nth-of-type(2) > p:nth-of-type(1), #testimonials > div:nth-of-type(2) > p:nth-of-type(3) {
+  cursor: pointer;
+}
+
+#testimonials > div:nth-of-type(2) > p:nth-of-type(2) {
+  color: white;
+  width: 700px;
+}
+
+#testimonials > div:nth-of-type(3) > img {
+  margin-top: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+}
+
+#testimonials > div:nth-of-type(3) > p {
+  margin-top: 0;
+  color: whitesmoke;
+}
+
+#contact-us {
+  margin-top: 100px;
+
 }
 
 /* ------------------------------------------------------------- */
