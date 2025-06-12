@@ -364,7 +364,7 @@ watchEffect(() => {
   </div>
 
   <div id="schedule">
-    <h2>Schedule</h2>
+    <h2>Our Schedule</h2>
 
     <div>
       <FullCalendar :options="calendarOptions" />
@@ -374,8 +374,14 @@ watchEffect(() => {
   <div id="contact-us">
     <h2>Contact Us</h2>
     <div>
-      <img src="../assets/contact-us/wa.png" alt="">
-      <p>08XXXXXXXXXX</p>
+      <div>
+        <img src="../assets/contact-us/wa.png" alt="">
+        <a href="https://wa.me/1234567890" target="_blank">1234567890</a>
+      </div>
+      <div>
+        <img src="../assets/contact-us/ig.png" alt="">
+        <a href="https://www.instagram.com/ruanghati_eventplanner/" target="_blank">@ruang_hati</a>
+      </div>
     </div>
   </div>
 </div>
@@ -669,42 +675,76 @@ watchEffect(() => {
 
 #schedule {
   margin-top: 100px;
+  height: fit-content;
 }
 
-#schedule div {
-  width: 600px;
-  max-width: 1000px;
-  height: 600px;
+#schedule > div  {
+  width: 950px;
+  height: fit-content;
   margin: auto;
+}
+
+#schedule > div > div {
+  border: black 5px solid;
+  padding: 30px;
 }
 
 #contact-us {
   margin-top: 100px;
-  padding-bottom: 20px;
+  background-color: #424242;
+  padding: 20px 20px 15px 20px;
+  display: flex;
+  justify-content: space-between; 
+  gap: 20px;
+  align-items: center;
 }
 
-#contact-us div {
-  background-color: #585B56;
-  margin: auto;
+#contact-us h2 {
+  color: white;
+  font-weight: 400;
+  font-size: small;
+}
+
+#contact-us > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#contact-us div > div {
   width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding: 0px 15px 0px 15px;
+  padding: 10px 0px 10px 25px;
   border-radius: 9999px;
   cursor: pointer;
+  transition: background-color 1s ease, padding 1s ease, margin-left 1s ease;
 }
 
-#contact-us div img {
+#contact-us > div > div > img {
   width: 32px;
   height: 32px;
 }
 
-#contact-us div p {
+#contact-us > div > div > a {
   color: whitesmoke;
-  font-weight: 500;
+  font-size: small;
+  display: none;
 }
+
+#contact-us > div > div:hover > a {
+  color: #e3e3e3;
+  display: block;
+}
+
+#contact-us > div > div:hover {
+  background-color: #585B56;
+  padding: 10px 25px 10px 25px;
+  margin-left: 20px;
+}
+
 
 /* ------------------------------------------------------------- */
 
