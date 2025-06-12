@@ -218,6 +218,7 @@ watchEffect(() => {
     <li><a href="#services">services</a></li>
     <li><a href="#pricelist">pricelist</a></li>
     <li><a href="#testimonials">testimonials</a></li>
+    <li><a href="#schedule">schedule</a></li>
     <li><a href="#contact-us">contact us</a></li>
   </ul>
 </div>  
@@ -322,9 +323,17 @@ watchEffect(() => {
     </div>
   </div>
 
+  <div id="schedule">
+    <h2>Schedule</h2>
+    <p>Coming soon...</p>
+  </div>
+
   <div id="contact-us">
     <h2>Contact Us</h2>
-    <p>Coming soon...</p>
+    <div>
+      <img src="../assets/contact-us/wa.png" alt="">
+      <p>08XXXXXXXXXX</p>
+    </div>
   </div>
 </div>
 
@@ -615,9 +624,36 @@ watchEffect(() => {
   color: whitesmoke;
 }
 
+#schedule {
+  margin-top: 100px;
+}
+
 #contact-us {
   margin-top: 100px;
+}
 
+#contact-us div {
+  background-color: #585B56;
+  margin: 20px auto 20px;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 15px 15px 15px 15px;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+#contact-us div img {
+  width: 50px;
+  height: 50px;
+}
+
+#contact-us div p {
+  color: whitesmoke;
+  font-weight: 500;
+  font-size: 18px;
 }
 
 /* ------------------------------------------------------------- */
