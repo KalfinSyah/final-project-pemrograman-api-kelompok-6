@@ -9,6 +9,12 @@ use App\Http\Resources\ActivityResource;
 
 class ActivityController extends Controller
 {
+    public function __construct()
+    {
+        // Hanya method index yang boleh diakses publik
+        $this->middleware(['auth:sanctum', 'is_admin'])->except('index');
+    }
+
     public function index()
     {
         return ActivityResource::collection(Activity::all());
