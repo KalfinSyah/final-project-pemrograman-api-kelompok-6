@@ -1,6 +1,9 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 
 const selectedService = ref('PS'); 
 const couruselIndex = ref(0);
@@ -9,6 +12,44 @@ const startX = ref(0);
 const scrollLeft = ref(0);
 const pricelistContainer = ref(null);
 const priceListPopup = ref({ isVisible: false, data: null });
+const indexTestimonial = ref(0);
+const calendarOptions = ref({
+  plugins: [dayGridPlugin, interactionPlugin],
+  initialView: 'dayGridMonth',
+  dayMaxEventRows: true,
+  views: {
+    timeGrid: {
+      dayMaxEventRows: 3
+    }
+  },
+  events: [
+    { title: 'event 1', date: '2025-06-13', description: 'Description for event 1' },
+    { title: 'event 2', date: '2025-06-13', description: 'Description for event 2' },
+    { title: 'event 3', date: '2025-06-13', description: 'Description for event 3' },
+    { title: 'event 4', date: '2025-06-13', description: 'Description for event 4' },
+    { title: 'event 5', date: '2025-06-13', description: 'Description for event 5' },
+    { title: 'event 6', date: '2025-06-13', description: 'Description for event 6' },
+    { title: 'event 7', date: '2025-06-13', description: 'Description for event 7' },
+    { title: 'event 8', date: '2025-06-13', description: 'Description for event 8' },
+  ],
+  
+  locale: 'id',
+  headerToolbar: {
+    today: 'Hari Ini',
+  },
+  // eventContent: function(arg) {
+  //   let eventTitle = document.createElement('b');
+  //   eventTitle.innerHTML = arg.event.title;
+
+  //   let eventDescription = document.createElement('div');
+  //   eventDescription.innerHTML = arg.event.extendedProps.description;
+  //   eventDescription.style.fontSize = '12px';
+  //   eventDescription.style.color = '#666';
+
+  //   let arrayOfDomNodes = [ eventTitle, eventDescription ];
+  //   return { domNodes: arrayOfDomNodes }
+  // }
+})
 
 const services = {
   PS: {
@@ -124,6 +165,28 @@ const pricelist = [
     `,
   },
 ];
+const testimonials = [
+  {
+    imgPath: new URL('../assets/profile/1.jpg', import.meta.url).href,
+    username: 'username1',
+    comment: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/2.jpg', import.meta.url).href,
+    username: 'username2',
+    comment: 'Lorem kasum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/3.jpg', import.meta.url).href,
+    username: 'username3',
+    comment: 'Lorem wesum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+  },
+  {
+    imgPath: new URL('../assets/profile/4.jpg', import.meta.url).href,
+    username: 'username4',
+    comment: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!, Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!",
+  },
+];
 
 function nextCoursel() {
   couruselIndex.value = (couruselIndex.value + 1) % courusel.length;
@@ -175,6 +238,14 @@ onMounted(() => {
   startAutoScroll(pricelistContainer, 0.5);
 });
 
+watchEffect(() => {
+  if (indexTestimonial.value < 0) {
+    indexTestimonial.value = testimonials.length - 1;
+  } else if (indexTestimonial.value >= testimonials.length) {
+    indexTestimonial.value = 0;
+  }
+});
+
 </script>
 
 
@@ -187,6 +258,7 @@ onMounted(() => {
     <li><a href="#services">services</a></li>
     <li><a href="#pricelist">pricelist</a></li>
     <li><a href="#testimonials">testimonials</a></li>
+    <li><a href="#schedule">schedule</a></li>
     <li><a href="#contact-us">contact us</a></li>
   </ul>
 </div>  
@@ -276,13 +348,41 @@ onMounted(() => {
   </div>
 
   <div id="testimonials">
-    <h2>Testimonials</h2>
-    <p>Coming soon...</p>
+    <div>
+      <h2>Testimonials</h2>
+      <p>from happy, delighted couples</p>
+    </div>
+    <div>
+      <p @click="indexTestimonial--" >🡨</p>
+      <p>{{ testimonials[indexTestimonial].comment }}</p>
+      <p @click="indexTestimonial++" >🡪</p>
+    </div>
+    <div>
+      <img :src="testimonials[indexTestimonial].imgPath" alt="profile picture">
+      <p>{{testimonials[indexTestimonial].username}}</p>
+    </div>
+  </div>
+
+  <div id="schedule">
+    <h2>Our Schedule</h2>
+
+    <div>
+      <FullCalendar :options="calendarOptions" />
+    </div>
   </div>
 
   <div id="contact-us">
     <h2>Contact Us</h2>
-    <p>Coming soon...</p>
+    <div>
+      <div>
+        <img src="../assets/contact-us/wa.png" alt="">
+        <a href="https://wa.me/1234567890" target="_blank">1234567890</a>
+      </div>
+      <div>
+        <img src="../assets/contact-us/ig.png" alt="">
+        <a href="https://www.instagram.com/ruanghati_eventplanner/" target="_blank">@ruang_hati</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -324,7 +424,7 @@ onMounted(() => {
 }
 
 #carousel {
-  height: 900px;
+  height: 750px;
   overflow: hidden;
   position: relative;
 }
@@ -336,11 +436,9 @@ onMounted(() => {
 
 #content {
   color: #474747;
-  padding: 20px;
   background-color: #f0f0f0;
-  margin-top: -150px;
+  margin-top: -170px;
   position: relative;
-  height: 100px;
   border-top-left-radius: 100% 150px;
   border-top-right-radius: 100% 150px;
   height: fit-content;
@@ -350,6 +448,7 @@ onMounted(() => {
   margin-top: 100px;
 }
 #services h2 {
+  padding-top: 100px;
   margin-bottom: 25px;
 }
 
@@ -437,10 +536,6 @@ onMounted(() => {
   padding: 20px;
 }
 
-#testimonials {
-  margin-top: 200px;
-} 
-
 #pricelist-popup {
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(1px); 
@@ -525,6 +620,131 @@ onMounted(() => {
     font-weight: bolder;
     margin-bottom: -15px;
 }
+
+#testimonials {
+  margin-top: 200px;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  background-color: #585B56;
+  padding-top: 35px;
+  padding-bottom: 35px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} 
+
+#testimonials div:first-child h2 {
+  color: white;
+}
+
+#testimonials div:first-child p {
+  color: rgb(195, 195, 195);
+  text-align: center;
+  margin-top: -10px;
+}
+
+#testimonials > div:nth-of-type(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(227, 227, 227);
+  gap: 100px;
+}
+
+#testimonials > div:nth-of-type(2) > p:nth-of-type(1), #testimonials > div:nth-of-type(2) > p:nth-of-type(3) {
+  cursor: pointer;
+}
+
+#testimonials > div:nth-of-type(2) > p:nth-of-type(2) {
+  color: white;
+  width: 700px;
+}
+
+#testimonials > div:nth-of-type(3) > img {
+  margin-top: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+}
+
+#testimonials > div:nth-of-type(3) > p {
+  margin-top: 0;
+  color: whitesmoke;
+}
+
+#schedule {
+  margin-top: 100px;
+  height: fit-content;
+}
+
+#schedule > div  {
+  width: 950px;
+  height: fit-content;
+  margin: auto;
+}
+
+#schedule > div > div {
+  border: black 5px solid;
+  padding: 30px;
+}
+
+#contact-us {
+  margin-top: 100px;
+  background-color: #424242;
+  padding: 20px 20px 15px 20px;
+  display: flex;
+  justify-content: space-between; 
+  gap: 20px;
+  align-items: center;
+}
+
+#contact-us h2 {
+  color: white;
+  font-weight: 400;
+  font-size: small;
+}
+
+#contact-us > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#contact-us div > div {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0px 10px 25px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 1s ease, padding 1s ease, margin-left 1s ease;
+}
+
+#contact-us > div > div > img {
+  width: 32px;
+  height: 32px;
+}
+
+#contact-us > div > div > a {
+  color: whitesmoke;
+  font-size: small;
+  display: none;
+}
+
+#contact-us > div > div:hover > a {
+  color: #e3e3e3;
+  display: block;
+}
+
+#contact-us > div > div:hover {
+  background-color: #585B56;
+  padding: 10px 25px 10px 25px;
+  margin-left: 20px;
+}
+
 
 /* ------------------------------------------------------------- */
 
