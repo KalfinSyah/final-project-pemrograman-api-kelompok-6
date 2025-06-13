@@ -7,13 +7,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClientResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'combined_name' => $this->combined_name,
+            'groom' => $this->groom,
+            'bride' => $this->bride,
+            'telephone_num' => $this->telephone_num,
+        ];
     }
 }

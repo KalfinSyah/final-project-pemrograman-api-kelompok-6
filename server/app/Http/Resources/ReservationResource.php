@@ -14,6 +14,18 @@ class ReservationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'client' => new ClientResource($this->whenLoaded('client')),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'vendors' => VendorResource::collection($this->whenLoaded('vendors')),
+            'marriage_contract_notes' => $this->marriage_contract_notes,
+            'reception_notes' => $this->reception_notes,
+            'cashflow_in' => $this->cashflow_in,
+            'cashflow_out' => $this->cashflow_out,
+            'wedding_package' => $this->wedding_package,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 }

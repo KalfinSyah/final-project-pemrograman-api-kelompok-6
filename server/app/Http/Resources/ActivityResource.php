@@ -14,6 +14,16 @@ class ActivityResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'reservation_id' => $this->reservation_id,
+            'activity_type' => $this->activity_type,
+            'activity_name' => $this->activity_name,
+            'activity_date' => $this->activity_date,
+            'activity_desc' => $this->activity_desc,
+            'activity_status' => $this->activity_status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 }
