@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\ActivityResource;
+use App\Http\Resources\ActivitySimplifiedResource;
 
 class ActivityController extends Controller
 {
@@ -17,7 +18,9 @@ class ActivityController extends Controller
 
     public function index()
     {
-        return ActivityResource::collection(Activity::all());
+        $activities = Activity::where('activity_type', 'Pelaksanaan Acara')->get();
+
+        return ActivitySimplifiedResource::collection($activities);
     }
 
     public function store(Request $request)
