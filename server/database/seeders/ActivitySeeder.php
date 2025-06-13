@@ -59,8 +59,8 @@ class ActivitySeeder extends Seeder
                 'activity_type' => 'Pelaksanaan Acara',
                 'activity_name' => 'Pelaksanaan Acara Pernikahan',
                 'activity_date' => '2025-07-10',
-                'activity_desc' => 'Diskusi awal dengan vendor dekorasi.',
-                'activity_status' => 'Pelaksanaan acara pernikahan untuk client Rano dan Julia.'
+                'activity_desc' => 'Pelaksanaan acara pernikahan untuk client Rano dan Julia.',
+                'activity_status' => 'Pending'
             ],
         ];
 
