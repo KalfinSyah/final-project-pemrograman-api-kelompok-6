@@ -30,16 +30,20 @@ class ReservationAndVendorSeeder extends Seeder
             [
                 'marriage_contract_notes' => 'Keluarga yang duduk di area akad : 1.2.3.4.',
                 'reception_notes' => 'Jumlah kursi keluarga PW : Jumlah kursi keluarga PP :',
-                'cashflow_in' => 50000000,
-                'cashflow_out' => 34000000,
-                'user_id' => 1
+                'cashflow_in' => 0,
+                'cashflow_out' => 0,
+                'wedding_package' => 'A',
+                'user_id' => 1,
+                'client_id' => 1,
             ],
             [
+                'user_id' => 1,
+                'client_id' => 2,
                 'marriage_contract_notes' => 'Keluarga yang duduk di area akad : 1.2.3.4.',
                 'reception_notes' => 'Jumlah kursi keluarga PW : Jumlah kursi keluarga PP :',
-                'cashflow_in' => 60000000,
-                'cashflow_out' => 42000000,
-                'user_id' => 2
+                'cashflow_in' => 0,
+                'cashflow_out' => 0,
+                'wedding_package' => 'B'
             ]
         ];
 

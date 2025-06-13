@@ -9,7 +9,7 @@ class Cashflow extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['reservation_id', 'cashflow_type', 'amount'];
+    protected $fillable = ['reservation_id', 'cashflow_type', 'amount', 'created_at'];
 
     public function reservation()
     {
