@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('reception_notes');
             $table->decimal('cashflow_in', 15, 2);
             $table->decimal('cashflow_out', 15, 2);
-            $table->string('wedding_package');
+            $table->enum('wedding_package', ['A', 'B', 'C', 'D', 'E'])->default('A');
             $table->timestamps();
         });
     }

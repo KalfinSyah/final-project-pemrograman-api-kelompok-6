@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservation_id')->constrained()->onDelete('restrict');
-            $table->string('activity_type', 50);
+            $table->enum('activity_type', ['Reservasi Lokasi', 'Pemesanan Katering', 'Koordinasi Staff', 'Pelaksanaan Acara'])->default('Pelaksanaan Acara');
             $table->string('activity_name', 100);
             $table->date('activity_date');
             $table->text('activity_desc');
-            $table->string('activity_status', 50);
+            $table->enum('activity_status', ['Pending', 'Selesai', 'Batal'])->default('Pending');
             $table->timestamps();
         });
     }

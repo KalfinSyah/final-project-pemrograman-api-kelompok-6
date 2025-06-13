@@ -14,6 +14,24 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         $clients  = [
+            // [
+            //     'combined_name' => 'John & Jane',
+            //     'groom' => 'John Doe',
+            //     'bride' => 'Jane Smith',
+            //     'telephone_num' => '08123432322'
+            // ],
+            // [
+            //     'combined_name' => 'Jake & Maria',
+            //     'groom' => 'Jake Bloke',
+            //     'bride' => 'Maria Carolina',
+            //     'telephone_num' => '08123412569'
+            // ],
+            // [
+            //     'combined_name' => 'James & Siti',
+            //     'groom' => 'James Slow',
+            //     'bride' => 'Siti Nabilah',
+            //     'telephone_num' => '08123465441'
+            // ],
             [
                 'combined_name' => 'Budi & Kartini',
                 'groom' => 'Budi Pekerti',
