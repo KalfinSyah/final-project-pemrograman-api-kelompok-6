@@ -14,7 +14,8 @@ class VendorController extends Controller
      */
     public function index()
     {
-        //
+        $vendors = Vendor::with(['reservations'])->get();
+        return VendorResource::collection($vendors);
     }
 
     /**
@@ -22,7 +23,14 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'vendor_type' => 'required|string',
+            'vendor_brand' => 'required|string',
+        ]);
+
+        $vendor = Vendor::create($validated);
+
+        return new VendorResource($vendor);
     }
 
     /**
@@ -30,7 +38,7 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        //
+        return new VendorResource($vendor);
     }
 
     /**
@@ -38,7 +46,14 @@ class VendorController extends Controller
      */
     public function update(Request $request, Vendor $vendor)
     {
-        //
+        $validated = $request->validate([
+            'vendor_type' => 'required|string',
+            'vendor_brand' => 'required|string',
+        ]);
+
+        $vendor->update($validated);
+
+        return new VendorResource($vendor);
     }
 
     /**
@@ -46,6 +61,23 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        //
+        if ($vendor->reservations()->exists()) {
+            return response()->json([
+                'message' => 'Vendor ini masih digunakan di salah satu atau lebih reservasi dan tidak dapat dihapus.'
+            ], 409); // 409 Conflict
+        }
+
+        $vendor->delete();
+
+        return response()->json([
+            'message' => 'Vendor berhasil dihapus.'
+        ]);
+
+        // $reservations = $client->reservations()->pluck('id');
+
+        // return response()->json([
+        //     'message' => 'Client ini digunakan pada reservasi berikut.',
+        //     'reservations' => $reservations,
+        // ], 409);
     }
 }
