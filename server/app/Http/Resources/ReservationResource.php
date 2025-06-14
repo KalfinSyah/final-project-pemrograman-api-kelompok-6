@@ -18,6 +18,7 @@ class ReservationResource extends JsonResource
             'id' => $this->id,
             'client' => new ClientResource($this->whenLoaded('client')),
             'user' => new UserResource($this->whenLoaded('user')),
+            'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'vendors' => VendorResource::collection($this->whenLoaded('vendors')),
             'marriage_contract_notes' => $this->marriage_contract_notes,
             'reception_notes' => $this->reception_notes,

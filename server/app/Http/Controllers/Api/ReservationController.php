@@ -14,7 +14,8 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = Reservation::with(['client', 'user', 'vendors'])->get();
+        return ReservationResource::collection($reservations);
     }
 
     /**
@@ -24,15 +25,14 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'user_id' => 'required|exists:users,id',
             'marriage_contract_notes' => 'required|string',
             'reception_notes' => 'required|string',
-            'cashflow_in' => 'required|numeric',
-            'cashflow_out' => 'required|numeric',
             'wedding_package' => 'required|string',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);
+
+        $validated['user_id'] = $request->user()->id;
 
         $reservation = Reservation::create($validated);
 
@@ -49,7 +49,8 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        $reservation->load(['client', 'user', 'vendors']);
+        return new ReservationResource($reservation);
     }
 
     /**
@@ -58,16 +59,14 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $validated = $request->validate([
-            'client_id' => 'sometimes|exists:clients,id',
-            'user_id' => 'sometimes|exists:users,id',
             'marriage_contract_notes' => 'sometimes|string',
             'reception_notes' => 'sometimes|string',
-            'cashflow_in' => 'sometimes|numeric',
-            'cashflow_out' => 'sometimes|numeric',
             'wedding_package' => 'sometimes|string',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);
+
+        $validated['updated_by'] = $request->user()->id;
 
         $reservation->update($validated);
 
@@ -84,6 +83,13 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        // Jika ada relasi pivot vendor, putuskan terlebih dahulu
+        $reservation->vendors()->detach();
+
+        $reservation->delete();
+
+        return response()->json([
+            'message' => 'Reservation deleted successfully.'
+        ]);
     }
 }

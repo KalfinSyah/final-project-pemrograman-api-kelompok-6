@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reservation_vendors', function (Blueprint $table) {
-            $table->foreignId('vendor_id')->constrained()->onDelete('restrict');
-            $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
-
-            $table->primary(['vendor_id', 'reservation_id']);
+        Schema::table('reservations', function (Blueprint $table) {
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('restrict');
         });
     }
 
@@ -24,6 +21,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reservation_vendors');
+        Schema::table('reservations', function (Blueprint $table) {
+            $table->dropColumn([
+                'updated_by'
+            ]);
+        });
     }
 };

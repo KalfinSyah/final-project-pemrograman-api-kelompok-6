@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reservation_id')->constrained()->onDelete('restrict');
+            $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
             $table->enum('activity_type', ['Reservasi Lokasi', 'Pemesanan Katering', 'Koordinasi Staff', 'Pelaksanaan Acara'])->default('Pelaksanaan Acara');
             $table->string('activity_name', 100);
             $table->date('activity_date');

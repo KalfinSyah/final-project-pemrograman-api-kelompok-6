@@ -27,8 +27,29 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
     public function vendors()
     {
         return $this->belongsToMany(Vendor::class, 'reservation_vendors');
+    }
+
+    public function cashflows()
+    {
+        return $this->hasMany(Cashflow::class, 'reservation_id');
+    }
+    public function getCashflowInAttribute()
+    {
+        return $this->cashflows()
+            ->where('cashflow_type', 'Pendapatan')
+            ->sum('amount');
+    }
+    public function getCashflowOutAttribute()
+    {
+        return $this->cashflows()
+            ->where('cashflow_type', 'Pengeluaran')
+            ->sum('amount');
     }
 }
