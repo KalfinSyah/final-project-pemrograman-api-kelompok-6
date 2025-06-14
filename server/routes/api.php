@@ -36,6 +36,8 @@ Route::apiResource('activities', ActivityController::class);
 Route::get('/all-activities', [ActivityController::class, 'all']);
 
 Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+    Route::get('/reservations/{id}/cashflows', [ReservationController::class, 'cashflows']);
+
     Route::apiResource('clients', CLientController::class);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('vendors', VendorController::class);
