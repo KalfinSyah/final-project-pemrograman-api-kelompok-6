@@ -49,7 +49,7 @@ class ActivitySeeder extends Seeder
             [
                 'reservation_id' => 2,
                 'activity_type' => 'Reservasi Lokasi',
-                'activity_name' => 'Briefing Dekorasi',
+                'activity_name' => 'Reservasi Tempat Pernikahan',
                 'activity_date' => '2025-07-10',
                 'activity_desc' => 'Diskusi dengan pihak penanggung jawab lokasi.',
                 'activity_status' => 'Pending'

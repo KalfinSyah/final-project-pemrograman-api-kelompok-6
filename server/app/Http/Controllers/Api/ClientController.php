@@ -14,7 +14,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        return ClientResource::collection(Client::all());
     }
 
     /**
@@ -22,7 +22,16 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'combined_name' => 'required|string',
+            'groom' => 'required|string',
+            'bride' => 'required|string',
+            'telephone_num' => 'required|string|max:15',
+        ]);
+
+        $client = Client::create($validated);
+
+        return new ClientResource($client);
     }
 
     /**
@@ -30,7 +39,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        //
+        return new ClientResource($client);
     }
 
     /**
@@ -38,7 +47,16 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        //
+        $validated = $request->validate([
+            'combined_name' => 'required|string',
+            'groom' => 'required|string',
+            'bride' => 'required|string',
+            'telephone_num' => 'required|string|max:15',
+        ]);
+
+        $client->update($validated);
+
+        return new ClientResource($client);
     }
 
     /**
@@ -46,6 +64,10 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return response()->json([
+            'message' => 'Client deleted successfully.'
+        ]);
     }
 }

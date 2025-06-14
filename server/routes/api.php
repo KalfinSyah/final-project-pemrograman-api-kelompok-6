@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\VendorController;
+use App\Http\Controllers\Api\CashflowController;
+use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Auth\AuthTokenController;
 
 /*
@@ -18,18 +20,10 @@ use App\Http\Controllers\Auth\AuthTokenController;
 |
 */
 
+// Route untuk testing saja
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::apiResource('activities', ActivityController::class);
-
-Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
-    Route::apiResource('reservations', ReservationController::class);
-    Route::apiResource('vendors', VendorController::class);
-});
-
-
 Route::group(['middleware' => ['auth:sanctum', 'is_admin']], function () {
     //Routes khusus admin
     Route::get('/admin-only', function () {
@@ -37,10 +31,22 @@ Route::group(['middleware' => ['auth:sanctum', 'is_admin']], function () {
     });
 });
 
+// Route activities dilengkapi middleware di dalam controller
+Route::apiResource('activities', ActivityController::class);
+Route::get('/all-activities', [ActivityController::class, 'all']);
+
+Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
+    Route::apiResource('clients', CLientController::class);
+    Route::apiResource('reservations', ReservationController::class);
+    Route::apiResource('vendors', VendorController::class);
+    Route::apiResource('reservations', ReservationController::class);
+    Route::apiResource('cashflows', CashflowController::class);
+});
+
 Route::get('/', function () {
     return ['API'];
 });
 
-Route::post('/register', [AuthTokenController::class, 'register']);
+// Route::post('/register', [AuthTokenController::class, 'register']);
 Route::post('/login', [AuthTokenController::class, 'login']);
 Route::post('/logout', [AuthTokenController::class, 'logout'])->middleware('auth:sanctum');
