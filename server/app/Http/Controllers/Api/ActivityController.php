@@ -23,6 +23,11 @@ class ActivityController extends Controller
         return ActivitySimplifiedResource::collection($activities);
     }
 
+    public function all()
+    {
+        return ActivityResource::collection(Activity::all());
+    }
+
     public function store(Request $request)
     {
         $activity = Activity::create($request->all());
