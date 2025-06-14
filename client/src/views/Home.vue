@@ -4,6 +4,7 @@ import { onMounted, ref, watchEffect } from 'vue';
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import Swal from 'sweetalert2'  
 
 const selectedService = ref('PS'); 
 const couruselIndex = ref(0);
@@ -13,6 +14,7 @@ const scrollLeft = ref(0);
 const pricelistContainer = ref(null);
 const priceListPopup = ref({ isVisible: false, data: null });
 const indexTestimonial = ref(0);
+const eventData = ref([]);
 const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
@@ -22,33 +24,38 @@ const calendarOptions = ref({
       dayMaxEventRows: 3
     }
   },
-  events: [
-    { title: 'event 1', date: '2025-06-13', description: 'Description for event 1' },
-    { title: 'event 2', date: '2025-06-13', description: 'Description for event 2' },
-    { title: 'event 3', date: '2025-06-13', description: 'Description for event 3' },
-    { title: 'event 4', date: '2025-06-13', description: 'Description for event 4' },
-    { title: 'event 5', date: '2025-06-13', description: 'Description for event 5' },
-    { title: 'event 6', date: '2025-06-13', description: 'Description for event 6' },
-    { title: 'event 7', date: '2025-06-13', description: 'Description for event 7' },
-    { title: 'event 8', date: '2025-06-13', description: 'Description for event 8' },
-  ],
-  
   locale: 'id',
   headerToolbar: {
     today: 'Hari Ini',
   },
-  // eventContent: function(arg) {
-  //   let eventTitle = document.createElement('b');
-  //   eventTitle.innerHTML = arg.event.title;
-
-  //   let eventDescription = document.createElement('div');
-  //   eventDescription.innerHTML = arg.event.extendedProps.description;
-  //   eventDescription.style.fontSize = '12px';
-  //   eventDescription.style.color = '#666';
-
-  //   let arrayOfDomNodes = [ eventTitle, eventDescription ];
-  //   return { domNodes: arrayOfDomNodes }
-  // }
+  eventClick: function(info) {
+    Swal.fire({
+      title: '<strong>📅 Wedding Event</strong>',
+      html: `
+        <div style="font-size: 15px; color: #334155;">
+          ${info.event.start.toLocaleDateString('id-ID', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+          })}<br>
+          ${info.event.extendedProps.description}
+        </div>
+      `,
+      icon: 'info',
+      showCloseButton: true,
+      showConfirmButton: false,
+      background: '#f8fafc',
+      color: '#1e293b',
+      customClass: {
+        popup: 'shadow-lg rounded-xl px-6 py-4',
+        title: 'text-lg font-semibold',
+      },
+      showClass: {
+        popup: 'animate__animated animate__zoomIn animate__faster'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__zoomOut animate__faster'
+      }
+    });
+  }
 })
 
 const services = {
@@ -232,10 +239,29 @@ function setPriceListPopup(isVisible, data = null) {
   priceListPopup.value.isVisible = isVisible;
   priceListPopup.value.data = data;
 }
+async function fetchEvent() {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/activities`)
+    if (!response.ok) {
+      alert('fetch event failed');
+    } else {
+      eventData.value = await response.json()
+      eventData.value.data = eventData.value.data.map(item => ({
+        title: "Pernikahan",
+        date: item.activity_date,
+        description: item.activity_desc
+      }))
+      calendarOptions.value.events = eventData.value.data
+    }
+  } catch (err) {
+    alert('fetch event failed : ' + err);
+  }
+}
 
 onMounted(() => {
   setInterval(nextCoursel, 6000);
   startAutoScroll(pricelistContainer, 0.5);
+  fetchEvent();
 });
 
 watchEffect(() => {
@@ -562,7 +588,6 @@ watchEffect(() => {
     width: 600px;
     flex-direction: column;
 }
-
 #pricelist-popup-details > :first-child {
     padding: 10px 15px 0 0;
     background-size: cover;
@@ -571,7 +596,6 @@ watchEffect(() => {
     text-align: right;
     height: 300px;
 }
-
 #pricelist-popup-details > :first-child > :first-child {
     background-color: transparent;
     border: none;
@@ -579,7 +603,6 @@ watchEffect(() => {
     font-size: 20px;
     font-weight: bold;
 }
-
 #pricelist-popup-details hr {
     height: 2px;
     background-color: black;
@@ -599,7 +622,6 @@ watchEffect(() => {
     margin-top: -20px;
     text-align: center;
 }
-
 #pricelist-popup-details > div:last-child > a {
   display: inline-block;
   background-color: black;
@@ -611,11 +633,9 @@ watchEffect(() => {
   transition: background-color 0.3s ease;
   margin-top: 20px;
 }
-
 #pricelist-popup-details > div:last-child > a:hover {
   background-color: #222;
 }
-
 #pricelist-popup-details-title {
     font-weight: bolder;
     margin-bottom: -15px;
@@ -633,17 +653,14 @@ watchEffect(() => {
   justify-content: center;
   align-items: center;
 } 
-
 #testimonials div:first-child h2 {
   color: white;
 }
-
 #testimonials div:first-child p {
   color: rgb(195, 195, 195);
   text-align: center;
   margin-top: -10px;
 }
-
 #testimonials > div:nth-of-type(2) {
   display: flex;
   justify-content: center;
@@ -651,23 +668,19 @@ watchEffect(() => {
   color: rgb(227, 227, 227);
   gap: 100px;
 }
-
 #testimonials > div:nth-of-type(2) > p:nth-of-type(1), #testimonials > div:nth-of-type(2) > p:nth-of-type(3) {
   cursor: pointer;
 }
-
 #testimonials > div:nth-of-type(2) > p:nth-of-type(2) {
   color: white;
   width: 700px;
 }
-
 #testimonials > div:nth-of-type(3) > img {
   margin-top: 20px;
   width: 80px;
   height: 80px;
   border-radius: 100%;
 }
-
 #testimonials > div:nth-of-type(3) > p {
   margin-top: 0;
   color: whitesmoke;
@@ -677,13 +690,11 @@ watchEffect(() => {
   margin-top: 100px;
   height: fit-content;
 }
-
 #schedule > div  {
   width: 950px;
   height: fit-content;
   margin: auto;
 }
-
 #schedule > div > div {
   border: black 5px solid;
   padding: 30px;
@@ -698,19 +709,16 @@ watchEffect(() => {
   gap: 20px;
   align-items: center;
 }
-
 #contact-us h2 {
   color: white;
   font-weight: 400;
   font-size: small;
 }
-
 #contact-us > div {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 #contact-us div > div {
   width: fit-content;
   display: flex;
@@ -722,23 +730,19 @@ watchEffect(() => {
   cursor: pointer;
   transition: background-color 1s ease, padding 1s ease, margin-left 1s ease;
 }
-
 #contact-us > div > div > img {
   width: 32px;
   height: 32px;
 }
-
 #contact-us > div > div > a {
   color: whitesmoke;
   font-size: small;
   display: none;
 }
-
 #contact-us > div > div:hover > a {
   color: #e3e3e3;
   display: block;
 }
-
 #contact-us > div > div:hover {
   background-color: #585B56;
   padding: 10px 25px 10px 25px;
