@@ -14,7 +14,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::with(['client', 'user', 'vendors'])->get();
+        $reservations = Reservation::with(['client', 'user', 'vendors', 'updatedBy'])->get();
         return ReservationResource::collection($reservations);
     }
 
@@ -33,6 +33,7 @@ class ReservationController extends Controller
         ]);
 
         $validated['user_id'] = $request->user()->id;
+        $validated['updated_by'] = $request->user()->id;
 
         $reservation = Reservation::create($validated);
 
@@ -49,7 +50,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation->load(['client', 'user', 'vendors']);
+        $reservation->load(['client', 'user', 'vendors', 'updatedBy']);
         return new ReservationResource($reservation);
     }
 

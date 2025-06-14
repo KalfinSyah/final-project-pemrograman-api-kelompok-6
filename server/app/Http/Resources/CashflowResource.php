@@ -15,6 +15,9 @@ class CashflowResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'cashflow_id' => $this->id,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'reservation_id' => $this->reservation_id,
             'cashflow_type' => $this->cashflow_type,
             'amount' => $this->amount,

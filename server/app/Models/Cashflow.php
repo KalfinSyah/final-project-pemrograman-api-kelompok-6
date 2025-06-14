@@ -9,7 +9,24 @@ class Cashflow extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['reservation_id', 'cashflow_type', 'amount', 'created_at'];
+    protected $fillable = [
+        'user_id',
+        'updated_by',
+        'reservation_id',
+        'cashflow_type',
+        'amount',
+        'created_at'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
     public function reservation()
     {

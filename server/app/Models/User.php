@@ -52,4 +52,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Reservation::class, 'updated_by');
     }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'user_id');
+    }
+
+    public function updatedActivities()
+    {
+        return $this->hasMany(Activity::class, 'updated_by');
+    }
+
+    public function cashflows()
+    {
+        return $this->hasMany(Cashflow::class, 'user_id');
+    }
+
+    public function updatedCashflow()
+    {
+        return $this->hasMany(Cashflow::class, 'updated_by');
+    }
 }

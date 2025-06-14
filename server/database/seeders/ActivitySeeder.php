@@ -16,6 +16,8 @@ class ActivitySeeder extends Seeder
         $activites  = [
             [
                 'reservation_id' => 1,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Reservasi Lokasi',
                 'activity_name' => 'Reservasi Tempat Pernikahan',
                 'activity_date' => '2025-06-20',
@@ -24,6 +26,8 @@ class ActivitySeeder extends Seeder
             ],
             [
                 'reservation_id' => 1,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Pelaksanaan Acara',
                 'activity_name' => 'Pelaksanaan Acara Pernikahan',
                 'activity_date' => '2025-06-26',
@@ -32,6 +36,8 @@ class ActivitySeeder extends Seeder
             ],
             [
                 'reservation_id' => 2,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Pemesanan Katering',
                 'activity_name' => 'Memesan Katering',
                 'activity_date' => '2025-06-28',
@@ -40,6 +46,8 @@ class ActivitySeeder extends Seeder
             ],
             [
                 'reservation_id' => 2,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Koordinasi Staff',
                 'activity_name' => 'Koordinasi Dengan Staff Dekor',
                 'activity_date' => '2025-07-03',
@@ -48,6 +56,8 @@ class ActivitySeeder extends Seeder
             ],
             [
                 'reservation_id' => 2,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Reservasi Lokasi',
                 'activity_name' => 'Reservasi Tempat Pernikahan',
                 'activity_date' => '2025-07-10',
@@ -56,6 +66,8 @@ class ActivitySeeder extends Seeder
             ],
             [
                 'reservation_id' => 2,
+                'user_id' => 1,
+                'updated_by' => 1,
                 'activity_type' => 'Pelaksanaan Acara',
                 'activity_name' => 'Pelaksanaan Acara Pernikahan',
                 'activity_date' => '2025-07-10',

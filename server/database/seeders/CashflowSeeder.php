@@ -15,6 +15,8 @@ class CashflowSeeder extends Seeder
     {
         $cashflows = [
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 1,
                 'cashflow_type' => 'Pendapatan',
                 'amount' => 10000000,
@@ -23,6 +25,8 @@ class CashflowSeeder extends Seeder
                 'updated_at' => '2025-06-10 10:00:00'
             ],
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 1,
                 'cashflow_type' => 'Pengeluaran',
                 'amount' => 6000000,
@@ -31,6 +35,8 @@ class CashflowSeeder extends Seeder
                 'updated_at' => '2025-06-20 10:00:00'
             ],
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 1,
                 'cashflow_type' => 'Pendapatan',
                 'amount' => 10000000,
@@ -39,6 +45,8 @@ class CashflowSeeder extends Seeder
                 'updated_at' => '2025-06-23 10:00:00'
             ],
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 2,
                 'cashflow_type' => 'Pengeluaran',
                 'amount' => 400000,
@@ -47,6 +55,8 @@ class CashflowSeeder extends Seeder
                 'updated_at' => '2025-06-30 10:00:00'
             ],
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 2,
                 'cashflow_type' => 'Pendapatan',
                 'amount' => 10000000,
@@ -55,6 +65,8 @@ class CashflowSeeder extends Seeder
                 'updated_at' => '2025-07-04 10:00:00'
             ],
             [
+                'user_id' => 1,
+                'updated_by' => 1,
                 'reservation_id' => 2,
                 'cashflow_type' => 'Pengeluaran',
                 'amount' => 7000000,

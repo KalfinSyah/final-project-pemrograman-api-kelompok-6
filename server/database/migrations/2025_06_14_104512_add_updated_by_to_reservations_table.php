@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::table('reservations', function (Blueprint $table) {
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('restrict');
         });
+        Schema::table('activities', function (Blueprint $table) {
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('restrict');
+        });
+        Schema::table('cashflows', function (Blueprint $table) {
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('restrict');
+        });
     }
 
     /**
@@ -22,6 +28,16 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('reservations', function (Blueprint $table) {
+            $table->dropColumn([
+                'updated_by'
+            ]);
+        });
+        Schema::table('activities', function (Blueprint $table) {
+            $table->dropColumn([
+                'updated_by'
+            ]);
+        });
+        Schema::table('cashflows', function (Blueprint $table) {
             $table->dropColumn([
                 'updated_by'
             ]);

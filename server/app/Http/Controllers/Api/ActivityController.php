@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\ActivityResource;
 use App\Http\Resources\ActivitySimplifiedResource;
+use Illuminate\Validation\Rule;
 
 class ActivityController extends Controller
 {
@@ -25,29 +26,71 @@ class ActivityController extends Controller
 
     public function all()
     {
-        return ActivityResource::collection(Activity::all());
+        $activities = Activity::with(['user', 'updatedBy'])->get();
+        return ActivityResource::collection($activities);
     }
 
     public function store(Request $request)
     {
-        $activity = Activity::create($request->all());
+        $validated = $request->validate([
+            'activity_type' => [
+                'required',
+                Rule::in(Activity::TYPES),
+            ],
+            'activity_status' => [
+                'required',
+                Rule::in(Activity::STATUSES),
+            ],
+            'activity_name' => 'required|string|max:100',
+            'activity_date' => 'required|date',
+            'activity_desc' => 'required|string',
+            'reservation_id' => 'required|exists:reservations,id',
+        ]);
+
+        $validated['user_id'] = $request->user()->id;
+        $validated['updated_by'] = $request->user()->id;
+
+        $activity = Activity::create($validated);
+
         return new ActivityResource($activity);
     }
 
     public function show(Activity $activity)
     {
+        $activity->load(['user', 'updatedBy']);
         return new ActivityResource($activity);
     }
 
     public function update(Request $request, Activity $activity)
     {
-        $activity->update($request->all());
+        $validated = $request->validate([
+            'activity_type' => [
+                'required',
+                Rule::in(Activity::TYPES),
+            ],
+            'activity_status' => [
+                'required',
+                Rule::in(Activity::STATUSES),
+            ],
+            'activity_name' => 'required|string|max:100',
+            'activity_date' => 'required|date',
+            'activity_desc' => 'required|string',
+            'reservation_id' => 'required|exists:reservations,id',
+        ]);
+
+        $validated['updated_by'] = $request->user()->id;
+
+        $activity->update($validated);
+
         return new ActivityResource($activity);
     }
 
     public function destroy(Activity $activity)
     {
         $activity->delete();
-        return response()->noContent();
+
+        return response()->json([
+            'message' => 'Activity deleted successfully.'
+        ]);
     }
 }

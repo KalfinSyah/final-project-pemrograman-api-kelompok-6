@@ -15,7 +15,10 @@ class ActivityResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'activity_id' => $this->id,
             'reservation_id' => $this->reservation_id,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'activity_type' => $this->activity_type,
             'activity_name' => $this->activity_name,
             'activity_date' => $this->activity_date,

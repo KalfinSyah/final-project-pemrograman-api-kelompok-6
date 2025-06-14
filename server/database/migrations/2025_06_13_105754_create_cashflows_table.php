@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('cashflows', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
             $table->enum('cashflow_type', ['Pendapatan', 'Pengeluaran'])->default('Pengeluaran');
             $table->string('cashflow_desc', 255);
