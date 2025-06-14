@@ -64,6 +64,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        abort(404);
+
         if ($client->reservations()->exists()) {
             return response()->json([
                 'message' => 'Client ini masih digunakan dalam salah satu atau lebih reservasi dan tidak dapat dihapus.'

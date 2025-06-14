@@ -92,6 +92,8 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
+        abort(404);
+
         // Jika ada relasi pivot vendor, putuskan terlebih dahulu
         $reservation->vendors()->detach();
 

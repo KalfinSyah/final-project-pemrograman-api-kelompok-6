@@ -61,6 +61,8 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
+        abort(404);
+
         if ($vendor->reservations()->exists()) {
             return response()->json([
                 'message' => 'Vendor ini masih digunakan di salah satu atau lebih reservasi dan tidak dapat dihapus.'

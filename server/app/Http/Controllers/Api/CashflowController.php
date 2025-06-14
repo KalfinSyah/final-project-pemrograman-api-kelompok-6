@@ -113,6 +113,9 @@ class CashflowController extends Controller
      */
     public function destroy(Cashflow $cashflow)
     {
+        // Abort 404 Untuk Saat ini
+        abort(404);
+
         $cashflow->delete();
 
         Reservation::all()->each(function ($reservation) {
