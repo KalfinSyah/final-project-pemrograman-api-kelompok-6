@@ -6,6 +6,7 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReservationResource;
+use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
 {
@@ -27,7 +28,10 @@ class ReservationController extends Controller
             'client_id' => 'required|exists:clients,id',
             'marriage_contract_notes' => 'required|string',
             'reception_notes' => 'required|string',
-            'wedding_package' => 'required|string',
+            'wedding_package' => [
+                'required',
+                Rule::in(Reservation::PACKAGES),
+            ],
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);
@@ -60,9 +64,12 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $validated = $request->validate([
-            'marriage_contract_notes' => 'sometimes|string',
-            'reception_notes' => 'sometimes|string',
-            'wedding_package' => 'sometimes|string',
+            'marriage_contract_notes' => 'sometimes|required|string',
+            'reception_notes' => 'sometimes|required|string',
+            'wedding_package' => [
+                'sometimes|required',
+                Rule::in(Reservation::PACKAGES),
+            ],
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);

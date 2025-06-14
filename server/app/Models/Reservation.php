@@ -20,6 +20,14 @@ class Reservation extends Model
         'wedding_package'
     ];
 
+    public const PACKAGES = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E',
+    ];
+
     public function client()
     {
         return $this->belongsTo(Client::class);
@@ -41,16 +49,16 @@ class Reservation extends Model
     {
         return $this->hasMany(Cashflow::class, 'reservation_id');
     }
-    public function getCashflowInAttribute()
-    {
-        return $this->cashflows()
-            ->where('cashflow_type', 'Pendapatan')
-            ->sum('amount');
-    }
-    public function getCashflowOutAttribute()
-    {
-        return $this->cashflows()
-            ->where('cashflow_type', 'Pengeluaran')
-            ->sum('amount');
-    }
+    // public function getCashflowInAttribute()
+    // {
+    //     return $this->cashflows()
+    //         ->where('cashflow_type', 'Pendapatan')
+    //         ->sum('amount');
+    // }
+    // public function getCashflowOutAttribute()
+    // {
+    //     return $this->cashflows()
+    //         ->where('cashflow_type', 'Pengeluaran')
+    //         ->sum('amount');
+    // }
 }

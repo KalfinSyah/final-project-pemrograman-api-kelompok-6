@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
             $table->foreignId('reservation_id')->constrained()->onDelete('cascade');
+            $table->date('cashflow_date');
             $table->enum('cashflow_type', ['Pendapatan', 'Pengeluaran'])->default('Pengeluaran');
             $table->string('cashflow_desc', 255);
             $table->decimal('amount', 15, 2);

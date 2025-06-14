@@ -48,10 +48,10 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $validated = $request->validate([
-            'combined_name' => 'required|string',
-            'groom' => 'required|string',
-            'bride' => 'required|string',
-            'telephone_num' => 'required|string|max:15',
+            'combined_name' => 'sometimes|required||string',
+            'groom' => 'sometimes|required||string',
+            'bride' => 'sometimes|required||string',
+            'telephone_num' => 'sometimes|required||string|max:15',
         ]);
 
         $client->update($validated);

@@ -14,8 +14,14 @@ class Cashflow extends Model
         'updated_by',
         'reservation_id',
         'cashflow_type',
+        'cashflow_date',
+        'cashflow_desc',
         'amount',
-        'created_at'
+    ];
+
+    public const TYPES = [
+        'Pendapatan',
+        'Pengeluaran',
     ];
 
     public function user()

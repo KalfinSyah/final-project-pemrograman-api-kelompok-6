@@ -47,8 +47,8 @@ class VendorController extends Controller
     public function update(Request $request, Vendor $vendor)
     {
         $validated = $request->validate([
-            'vendor_type' => 'required|string',
-            'vendor_brand' => 'required|string',
+            'vendor_type' => 'sometimes|required|string',
+            'vendor_brand' => 'sometimes|required|string',
         ]);
 
         $vendor->update($validated);

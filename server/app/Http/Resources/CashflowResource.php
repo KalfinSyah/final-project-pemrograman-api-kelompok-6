@@ -20,6 +20,8 @@ class CashflowResource extends JsonResource
             'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'reservation_id' => $this->reservation_id,
             'cashflow_type' => $this->cashflow_type,
+            'cashflow_date' => $this->cashflow_date,
+            'cashflow_desc' => $this->cashflow_desc,
             'amount' => $this->amount,
             'created_at' => $this->created_at,
         ];
