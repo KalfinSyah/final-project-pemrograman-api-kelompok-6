@@ -58,6 +58,8 @@ const calendarOptions = ref({
   }
 })
 
+let intervalTestimonial;
+
 const services = {
   PS: {
     imgPath: new URL('../assets/our-service/service-PS.jpg', import.meta.url).href,
@@ -262,6 +264,7 @@ onMounted(() => {
   setInterval(nextCoursel, 6000);
   startAutoScroll(pricelistContainer, 0.5);
   fetchEvent();
+  intervalTestimonial = setInterval(() => indexTestimonial.value++, 4000);
 });
 
 watchEffect(() => {
@@ -279,7 +282,8 @@ watchEffect(() => {
 <template>
   
 <div id="nav">
-  <div>Ruang Hati</div>
+  <!-- <div>Ruang Hati</div> -->
+  <!-- <img src="../assets/logo.png" alt=""> -->
   <ul>
     <li><a href="#services">services</a></li>
     <li><a href="#pricelist">pricelist</a></li>
@@ -293,6 +297,8 @@ watchEffect(() => {
   <transition name="fade" mode="out-in">
     <img :key="couruselIndex" :src="courusel[couruselIndex]" alt="carousel image" />
   </transition>
+
+  <img src="../assets/logo.png" alt="">
 </div>
 
 <div id="content">
@@ -340,6 +346,7 @@ watchEffect(() => {
 
       <div class="pricelist-card" v-for="item in pricelist" :key="item.title">
         <div @click="setPriceListPopup(true, item)" class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+          <div class="pricelist-details-bg"></div>
           <h3>{{ item.title }}</h3>
           <p>{{ item.price }}</p>
         </div>
@@ -348,6 +355,7 @@ watchEffect(() => {
       <!-- duplicated items to create loop -->
       <div class="pricelist-card" v-for="item in pricelist" :key="item.title + '-clone'">
         <div @click="setPriceListPopup(true, item)" class="pricelist-details" :style="{ backgroundImage: `url(${item.imgPath})` }">
+          <div class="pricelist-details-bg"></div>
           <h3>{{ item.title }}</h3>
           <p>{{ item.price }}</p>
         </div>
@@ -431,14 +439,16 @@ watchEffect(() => {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
   z-index: 9999;
   height: 60px;
-}
-#nav div {
   color: #e3e3e3;
+}
+#nav img {
+  height: 50px;
+  width: 100px;
 }
 #nav ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: auto;
 }
 #nav li {
   display: inline-block; 
@@ -454,10 +464,18 @@ watchEffect(() => {
   overflow: hidden;
   position: relative;
 }
-#carousel img {
+#carousel > img:first-child {
   width: 100%;
   height: 100%;
   object-fit: cover; 
+  filter: blur(1.5px);
+}
+#carousel > img:nth-child(2) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -65%);
+  width: 300px;
 }
 
 #content {
@@ -772,13 +790,26 @@ watchEffect(() => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
+.pricelist-details-bg {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  position: absolute;
+  backdrop-filter: blur(1px);
 }
 .pricelist-details h3 {
   font-weight: 500;
   margin: 0 auto 0 auto;
+  position: relative;
 }
 .pricelist-details p {
   margin: 5px auto 0 auto;
+  position: relative;
 }
 
 /* ------------------------------------------------------------- */
