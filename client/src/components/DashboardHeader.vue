@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">{{ "Admin Dashboard" }}</h1>
   </div>
 </template>
 

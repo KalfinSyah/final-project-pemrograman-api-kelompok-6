@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
-import Dashboard from '../views/admin/Dashboard.vue'
+import Dashboard from '../views/Admin/Dashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(),

@@ -6,9 +6,8 @@ const route = useRoute()
 
 <template>
   <div class="fixed top-0 left-0 w-64 h-screen bg-[#2F3367] text-white flex flex-col p-2 z-20">
-    <div class="mb-8 flex flex-col items-center">
+    <div class="mb-4 flex flex-col items-center">
       <img :src="logo" alt="Ruang Hati" class="h-12 mb-2" />
-      <span class="text-lg font-script">"berawal dari hati"</span>
     </div>
     <nav class="flex flex-col space-y-2">
       <router-link
@@ -40,7 +39,7 @@ const route = useRoute()
         <span class="mr-2">📄</span> Laporan
       </router-link>
     </nav>
-    <div class="mt-auto flex flex-col space-y-2">
+    <div class="mt-auto mb-4 flex flex-col space-y-2">
       <router-link
         to="/pengaturan"
         class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
