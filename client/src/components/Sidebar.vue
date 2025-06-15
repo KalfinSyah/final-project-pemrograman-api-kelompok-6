@@ -1,18 +1,67 @@
+<script setup>
+import logo from '../assets/logo.png'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+</script>
+
 <template>
-  <div class="w-64 bg-[#2F3367] text-white flex flex-col h-full p-4">
-    <div class="text-2xl font-bold mb-8">Ruang Hati</div>
-    <nav class="flex flex-col space-y-4">
-      <RouterLink class="hover:underline" to="/">Dashboard</RouterLink>
-      <RouterLink class="hover:underline" to="/acara">Acara</RouterLink>
-      <RouterLink class="hover:underline" to="/klien">Klien</RouterLink>
-      <RouterLink class="hover:underline" to="/laporan">Laporan</RouterLink>
+  <div class="fixed top-0 left-0 w-64 h-screen bg-[#2F3367] text-white flex flex-col p-2 z-20">
+    <div class="mb-8 flex flex-col items-center">
+      <img :src="logo" alt="Ruang Hati" class="h-12 mb-2" />
+      <span class="text-lg font-script">"berawal dari hati"</span>
+    </div>
+    <nav class="flex flex-col space-y-2">
+      <router-link
+        to="/admin/dashboard"
+        class="flex items-center px-4 py-2 rounded transition"
+        :class="route.path === '/admin/dashboard' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+      >
+        <span class="mr-2">🏠</span> Dashboard
+      </router-link>
+      <router-link
+        to="/acara"
+        class="flex items-center px-4 py-2 rounded transition"
+        :class="route.path === '/acara' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+      >
+        <span class="mr-2">📅</span> Acara
+      </router-link>
+      <router-link
+        to="/klien"
+        class="flex items-center px-4 py-2 rounded transition"
+        :class="route.path === '/klien' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+      >
+        <span class="mr-2">👤</span> Klien
+      </router-link>
+      <router-link
+        to="/laporan"
+        class="flex items-center px-4 py-2 rounded transition"
+        :class="route.path === '/laporan' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+      >
+        <span class="mr-2">📄</span> Laporan
+      </router-link>
     </nav>
-    <div class="mt-auto space-y-2">
-      <button class="text-sm hover:underline">Pengaturan</button>
-      <button class="text-sm hover:underline">Keluar</button>
+    <div class="mt-auto flex flex-col space-y-2">
+      <router-link
+        to="/pengaturan"
+        class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
+      >
+        <span class="mr-2">⚙️</span> Pengaturan
+      </router-link>
+      <router-link
+        to="/keluar"
+        class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
+      >
+        <span class="mr-2">🚪</span> Keluar
+      </router-link>
     </div>
   </div>
 </template>
 
-<script setup>
-</script>
+<style scoped>
+.font-script {
+  font-family: 'Dancing Script', cursive, sans-serif;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.8;
+}
+</style>

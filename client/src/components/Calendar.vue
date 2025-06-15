@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 rounded shadow w-full">
+  <div class="bg-white p-4 rounded shadow w-full text-gray-800">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold">May 2025</h2>
       <div class="flex gap-2 text-xl">

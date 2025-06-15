@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white p-4 rounded-xl shadow text-center">
+  <div class="bg-white p-4 rounded-xl shadow text-center text-gray-800">
     <h2 class="text-lg font-semibold mb-4">Progress</h2>
     <div class="relative w-24 h-24 mx-auto">
       <svg class="w-full h-full" viewBox="0 0 36 36">
-        <path class="text-gray-300" d="M18 2.0845 a 15.9155 15.9155 0 1 0 0.00001 0" fill="none" stroke-width="2" />
-        <path class="text-indigo-600" :d="arcPath" fill="none" stroke-width="2" stroke-linecap="round" />
+        <path class="text-gray-300" stroke="currentColor" d="M18 2.0845 a 15.9155 15.9155 0 1 0 0.00001 0" fill="none" stroke-width="2" />
+        <path class="text-indigo-600" stroke="currentColor" :d="arcPath" fill="none" stroke-width="2" stroke-linecap="round" />
       </svg>
       <div class="absolute inset-0 flex items-center justify-center text-xl font-bold">
         {{ value }}%
