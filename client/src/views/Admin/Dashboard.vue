@@ -46,7 +46,7 @@ const calendarOptions = ref({
           <CashflowCard :masuk="1500000" :keluar="1000000" />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        <!-- Checklist Card tes-->
+        <!-- Checklist Card tes 2-->
           <ChecklistCard :items="checklistItems" />
         <!-- Calendar Card -->
           <CalendarCard :options="calendarOptions" />
