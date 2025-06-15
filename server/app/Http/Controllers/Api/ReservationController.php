@@ -68,7 +68,8 @@ class ReservationController extends Controller
             'marriage_contract_notes' => 'sometimes|required|string',
             'reception_notes' => 'sometimes|required|string',
             'wedding_package' => [
-                'sometimes|required',
+                'sometimes',
+                'required',
                 Rule::in(Reservation::PACKAGES),
             ],
             'vendor_ids' => 'nullable|array',
