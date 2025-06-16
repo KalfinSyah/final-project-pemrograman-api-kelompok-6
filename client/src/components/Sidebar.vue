@@ -11,7 +11,7 @@ const route = useRoute()
     </div>
     <nav class="flex flex-col space-y-2">
       <router-link
-        to="/admin/dashboard"
+        to="/dashboard"
         class="flex items-center px-4 py-2 rounded transition"
         :class="route.path === '/admin/dashboard' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >

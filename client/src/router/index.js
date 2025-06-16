@@ -25,11 +25,7 @@ const router = createRouter({
       name: "register", 
       component: Register
     },
-    {
-      path: "/admin/dashboard",
-      name: "admin-dashboard",
-      component: Dashboard,
-    },
+    {path: "/dashboard", name: "admin-dashboard", component: Dashboard },
     { path: '/acara', name: 'acara', component: Acara },
     { path: '/klien', name: 'klien', component: Klien },
     { path: '/laporan', name: 'laporan', component: Laporan },
