@@ -90,9 +90,9 @@ const graphData = [
                 <td colspan="4" class="px-4 py-2 text-center text-gray-400">Belum ada transaksi.</td>
               </tr>
               <tr v-for="trx in transactionHistory" :key="trx.id" class="bg-gray-100">
-                <td class="px-4 py-2">{{ trx.id }}</td>
-                <td class="px-4 py-2">{{ trx.tanggal }}</td>
-                <td class="px-4 py-2">{{ trx.deskripsi }}</td>
+                <td class="px-4 py-2 text-black">{{ trx.id }}</td>
+                <td class="px-4 py-2 text-black">{{ trx.tanggal }}</td>
+                <td class="px-4 py-2 text-black">{{ trx.deskripsi }}</td>
                 <td class="px-4 py-2 font-bold"
                   :class="trx.jumlah > 0 ? 'text-[#2F3367]' : 'text-red-500'">
                   {{ trx.jumlah > 0 ? '+' : '-' }}IDR {{ Math.abs(trx.jumlah).toLocaleString() }}

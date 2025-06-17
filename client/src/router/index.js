@@ -8,8 +8,8 @@ import Klien from '../views/Admin/Klien.vue'
 import Vendor from '../views/Admin/Vendor.vue'
 import Laporan from '../views/Admin/Laporan.vue'
 import Pengaturan from '../views/Admin/Pengaturan.vue'
-import ViewAcara from '../views/Admin/ViewAcara.vue'
 import EditAcara from '../views/Admin/EditAcara.vue'
+import ViewAcara from '../views/Admin/ViewAcara.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,6 +25,8 @@ const router = createRouter({
     { path: '/view', name: 'view', component: ViewAcara },
     { path: '/edit', name: 'edit', component: EditAcara },
     { path: '/pengaturan', name: 'pengaturan', component: Pengaturan },
+    { path: '/editAcara', name: 'edit-acara', component: EditAcara },
+    { path: '/viewAcara', name: 'view-acara', component: ViewAcara }
   ]
 })
 

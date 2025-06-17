@@ -7,7 +7,7 @@
     </div>
     <div class="flex items-center mb-2">
       <span class="mr-2">📍</span>
-      <span class="font-semibold">Graha Ado</span>
+      <span class="font-semibold">{{ location }}</span>
     </div>
     <div class="flex items-center mb-2">
       <span class="mr-2">📅</span>
@@ -17,7 +17,7 @@
       <h3 class="font-bold">Kegiatan Sekarang</h3>
       <div class="flex items-center mt-4">
         <span class="mr-8 font-semibold">{{ currentTask }}</span>
-        <span class="ml-2 px-4 py-1 rounded border text-xs font-semibold border-[#2F3367] text-[#2F3367] bg-white">Berlangsung</span>
+        <span class="ml-2 px-4 py-1 rounded border text-xs font-semibold border-[#2F3367] text-[#2F3367] bg-white">{{ reservationStatus }}</span>
       </div>
     </div>
   </div>
@@ -28,6 +28,6 @@ const props = defineProps({
   currentEvent: String,
   date: String,
   currentTask: String,
-  taskDate: String
-})
+  taskDate: String,
+  location: String})
 </script>

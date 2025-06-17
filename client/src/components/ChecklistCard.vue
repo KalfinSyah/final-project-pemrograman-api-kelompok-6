@@ -30,9 +30,11 @@
 <script setup>
 import { computed } from 'vue'
 const props = defineProps({
-  items: Array
+  items: Array,
+  completedCount: {
+    type: Number,
+    default: 0
+  }
 })
-// For demo, mark first 3 as completed
-const completedCount = 3
-const progressBar = computed(() => props.items.length ? (completedCount / props.items.length) * 100 : 0)
+const progressBar = computed(() => props.items.length ? (props.completedCount / props.items.length) * 100 : 0)
 </script>
