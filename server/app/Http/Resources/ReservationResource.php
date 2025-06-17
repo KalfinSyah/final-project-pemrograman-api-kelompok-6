@@ -23,6 +23,7 @@ class ReservationResource extends JsonResource
             'cashflows' => CashflowResource::collection($this->whenLoaded('cashflows')),
             'activities' => ActivityResource::collection($this->whenLoaded('activities')),
             'wedding_contract_notes' => $this->wedding_contract_notes,
+            'wedding_location' => $this->wedding_location,
             'reception_notes' => $this->reception_notes,
             'cashflow_in' => $this->cashflow_in,
             'cashflow_out' => $this->cashflow_out,

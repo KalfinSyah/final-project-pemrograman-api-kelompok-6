@@ -42,7 +42,8 @@ class ReservationController extends Controller
             'combined_name' => 'required|string',
             'groom' => 'required|string',
             'bride' => 'required|string',
-            'telephone_num' => 'required|string|max:15'
+            'telephone_num' => 'required|string|max:15',
+            'wedding_location' => 'sometimes|string|max:255'
         ]);
 
         $validated['user_id'] = $request->user()->id;
@@ -91,7 +92,8 @@ class ReservationController extends Controller
             'combined_name' => 'sometimes|required|string',
             'groom' => 'sometimes|required|string',
             'bride' => 'sometimes|required|string',
-            'telephone_num' => 'sometimes|required|string|max:15'
+            'telephone_num' => 'sometimes|required|string|max:15',
+            'wedding_location' => 'sometimes|string|max:255'
         ]);
 
         $validated['updated_by'] = $request->user()->id;
