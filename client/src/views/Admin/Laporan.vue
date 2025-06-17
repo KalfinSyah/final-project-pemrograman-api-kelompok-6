@@ -86,7 +86,7 @@ async function fetchTransactions() {
 function getBarHeight(value) {
   if (!maxNominal.value || maxNominal.value === 0) return '8px'
   // 90px is the max bar height for better label spacing
-  return Math.min((Math.abs(value) / maxNominal.value) * 90, 90) + 'px'
+  return Math.min((Math.abs(value) / maxNominal.value) * 140, 140) + 'px'
 }
 
 onMounted(() => {
