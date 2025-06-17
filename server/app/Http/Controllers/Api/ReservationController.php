@@ -63,7 +63,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation->load(['user', 'vendors', 'updatedBy']);
+        $reservation->load(['user', 'vendors', 'updatedBy', 'cashflows', 'activities']);
         return new ReservationResource($reservation);
     }
 
@@ -128,5 +128,21 @@ class ReservationController extends Controller
         $reservation = Reservation::with('cashflows')->findOrFail($id);
 
         return CashflowResource::collection($reservation->cashflows);
+    }
+
+    public function showClosest()
+    {
+        // Ambil reservasi dengan tanggal paling dekat dari hari ini
+        $reservation = Reservation::whereDate('wedding_date', '>=', now())
+            ->orderBy('wedding_date', 'asc')
+            ->first();
+
+        if (!$reservation) {
+            return response()->json(['message' => 'Tidak ada reservasi yang akan datang'], 404);
+        }
+
+        $reservation->load(['user', 'vendors', 'updatedBy', 'cashflows', 'activities']);
+
+        return new ReservationResource($reservation);
     }
 }

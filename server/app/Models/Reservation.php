@@ -58,6 +58,11 @@ class Reservation extends Model
     {
         return $this->hasMany(Cashflow::class, 'reservation_id');
     }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'reservation_id');
+    }
     // public function getCashflowInAttribute()
     // {
     //     return $this->cashflows()

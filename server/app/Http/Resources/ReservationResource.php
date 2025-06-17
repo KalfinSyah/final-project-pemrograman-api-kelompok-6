@@ -20,6 +20,8 @@ class ReservationResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
             'updated_by' => new UserResource($this->whenLoaded('updatedBy')),
             'vendors' => VendorResource::collection($this->whenLoaded('vendors')),
+            'cashflows' => CashflowResource::collection($this->whenLoaded('cashflows')),
+            'activities' => ActivityResource::collection($this->whenLoaded('activities')),
             'wedding_contract_notes' => $this->wedding_contract_notes,
             'reception_notes' => $this->reception_notes,
             'cashflow_in' => $this->cashflow_in,
