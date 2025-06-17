@@ -16,7 +16,7 @@ class ReservationAndVendorSeeder extends Seeder
     {
         $vendors = [
             ['vendor_type' => 'Venue', 'vendor_brand' => 'Gita Tantama'],
-            ['vendor_type' => 'Dekorasi', 'vendor_brand' => 'Christal'],
+            ['vendor_type' => 'Dekorasi ', 'vendor_brand' => 'Christal'],
             ['vendor_type' => 'Sound', 'vendor_brand' => 'Nasir'],
         ];
 
