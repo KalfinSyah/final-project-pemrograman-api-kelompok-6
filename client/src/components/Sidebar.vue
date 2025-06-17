@@ -29,9 +29,9 @@ function handleLogout() {
         <span class="mr-2">📅</span> Acara
       </router-link>
       <router-link
-        to="/klien"
+        to="/vendor"
         class="flex items-center px-4 py-2 rounded transition"
-        :class="route.path === '/klien' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+        :class="route.path === '/vendor' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
         <span class="mr-2">🧰</span> Vendor
       </router-link>
