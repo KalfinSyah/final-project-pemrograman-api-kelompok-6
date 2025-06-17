@@ -18,6 +18,9 @@
     wedding_location: ""
   })
 
+  const dataCashFlow = ref([])
+  const formAddCashFlow = ref({})
+
   const tambahKegiatanForm = ref({
     isShowing: false,
     data: {
@@ -187,8 +190,35 @@ async function addActivity() {
           }
 }
 
+async function fetchDataCashflow() {
+            try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows`, {
+              method: "GET",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+            });
+            if (response.ok) {
+              const data = await response.json();
+              dataCashFlow.value = data.data  
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal fetch cashflow!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal fetch cashflow! (system error)"
+              });
+          }
+}
+
 onMounted(() => {
   fetchAcara();
+  fetchDataCashflow();
 });
 </script>
 
@@ -265,12 +295,53 @@ onMounted(() => {
       </form>
     </div>
 
+    <div class="bg-white rounded-lg shadow p-6">
+    <div @click="popupTambahKegiatan(true)" class="col-span-1 md:col-span-2 text-right mt-2">
+      <button class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Tambah Cashflow
+      </button>
+    </div>
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Cashflow</h2>
+
+    <div v-if="dataCashFlow && dataCashFlow.length > 0" class="space-y-4">
+      <div
+        v-for="cashData in dataCashFlow"
+        class="relative border-l-4 pl-4 border-blue-500 bg-gray-50 p-4 rounded"
+      >
+        <!-- Edit Button -->
+        <!-- <button
+          @click="editKegiatan(activity.activity_id)"
+          class="absolute top-3 right-3 text-sm text-blue-600 hover:underline hover:text-blue-800"
+        >
+          Edit
+        </button> -->
+
+        <p class="text-gray-700 mt-2">
+          Tipe : {{ cashData.cashflow_type }}
+        </p>
+
+        <p class="text-gray-700 mt-2">
+          Tanggal : {{ cashData.cashflow_date }}
+        </p>
+
+        <p class="text-gray-700 mt-2">
+          Deskripsi : {{ cashData.cashflow_desc }}
+        </p>
+        <p class="text-gray-700 mt-2">
+          Total : {{ cashData.amount }}
+        </p>
+      </div>
+    </div>
+
+    <div v-else class="text-gray-500 text-sm italic">Belum ada cashflow.</div>
+  </div>
+  <div class="bg-white rounded-lg shadow p-6">
+
     <div @click="popupTambahKegiatan(true)" class="col-span-1 md:col-span-2 text-right mt-2">
       <button class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
         Tambah Kegiatan
       </button>
     </div>
-  <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Jadwal Kegiatan</h2>
 
     <div v-if="form.activities && form.activities.length > 0" class="space-y-4">
@@ -303,8 +374,8 @@ onMounted(() => {
           class="inline-block mt-2 px-3 py-1 text-xs rounded-full"
           :class="{
             'bg-yellow-200 text-yellow-800': activity.activity_status === 'Pending',
-            'bg-green-200 text-green-800': activity.activity_status === 'Completed',
-            'bg-red-200 text-red-800': activity.activity_status === 'Cancelled'
+            'bg-green-200 text-green-800': activity.activity_status === 'Selesai',
+            'bg-red-200 text-red-800': activity.activity_status === 'Batal'
           }"
         >
           {{ activity.activity_status }}
@@ -363,6 +434,54 @@ onMounted(() => {
     </div>
   </div>
 </div>
+
+<div v-if="tambahKegiatanForm.isShowing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Tambah Kegiatan</h2>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-gray-700">Nama Kegiatan</label>
+        <input v-model="tambahKegiatanForm.data.activity_name" type="text" class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Jenis Kegiatan</label>
+        <select v-model="tambahKegiatanForm.data.activity_type" class="w-full border rounded px-3 py-2">
+          <option value="Reservasi Lokasi">Reservasi Lokasi</option>
+          <option value="Pemesanan Katering">Pemesanan Katering</option>
+          <option value="Koordinasi Staff">Koordinasi Staff</option>
+          <option value="Pelaksanaan Acara">Pelaksanaan Acara</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Tanggal</label>
+        <input v-model="tambahKegiatanForm.data.activity_date" type="date" class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Deskripsi</label>
+        <textarea v-model="tambahKegiatanForm.data.activity_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Status</label>
+        <select v-model="tambahKegiatanForm.data.activity_status" class="w-full border rounded px-3 py-2">
+          <option value="Pending">Pending</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Batal">Batal</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end space-x-2">
+      <button @click="closeEditModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+      <button @click="addActivity" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tambah</button>
+    </div>
+  </div>
+</div>
+
 
 <div v-if="tambahKegiatanForm.isShowing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
