@@ -7,12 +7,13 @@ const transactionHistory = ref([])
 // --- Graph Data ---
 const graphRaw = ref({})
 const graphData = computed(() => {
-  // Flatten and sort by date
+  // Flatten and keep month info
   const arr = []
   Object.entries(graphRaw.value).forEach(([bulan, items]) => {
     items.forEach(item => {
       arr.push({
         ...item,
+        bulan,
         label: item.cashflow_date,
         value: item.cashflow_type === 'Pendapatan'
           ? Number(item.amount)
@@ -22,6 +23,18 @@ const graphData = computed(() => {
   })
   // Sort by date ascending
   return arr.sort((a, b) => new Date(a.label) - new Date(b.label))
+})
+const monthGroups = computed(() => {
+  // [{ bulan: 'Juni', count: 4 }, ...]
+  const result = []
+  Object.entries(graphRaw.value).forEach(([bulan, items]) => {
+    result.push({ bulan, count: items.length })
+  })
+  return result
+})
+const maxNominal = computed(() => {
+  if (graphData.value.length === 0) return 0
+  return Math.max(...graphData.value.map(item => Math.abs(item.value)))
 })
 
 // --- Cashflow Summary ---
@@ -87,18 +100,46 @@ onMounted(() => {
     <div class="ml-64 p-8">
       <h1 class="text-5xl font-bold text-[#2F3367] mb-8">Laporan</h1>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <!-- Dummy Graph -->
+        <!-- Grafik Cashflow -->
         <div class="bg-white rounded-2xl shadow-lg p-8 min-h-[320px] flex flex-col justify-between">
           <h2 class="text-xl font-bold text-[#2F3367] mb-4">Grafik Cashflow</h2>
-          <div class="w-full h-64 flex items-end gap-4 px-4 overflow-x-auto" style="max-width:100%;">
-            <div v-for="(item, idx) in graphData" :key="idx" class="flex flex-col items-center min-w-[48px]">
+          <div class="relative w-full h-64 flex flex-row">
+            <!-- Month Labels -->
+            <div class="absolute top-0 left-0 w-full flex gap-4 px-4 mb-2 z-10">
+              <template v-for="(group, idx) in monthGroups" :key="group.bulan">
+                <div
+                  class="flex items-center justify-center font-semibold text-[#2F3367]"
+                  :style="{ minWidth: (group.count * 48 + (group.count - 1) * 16) + 'px' }"
+                >
+                  {{ group.bulan }}
+                </div>
+                <div v-if="idx !== monthGroups.length - 1" style="width:16px;"></div>
+              </template>
+            </div>
+            <!-- Bars -->
+            <div class="flex items-end gap-4 px-4 h-52 w-full overflow-x-auto" style="margin-top:32px;">
               <div
-                :class="item.value > 0 ? 'bg-[#2F3367]' : 'bg-red-500'"
-                class="w-8 rounded-t transition-all duration-300"
-                :style="{ height: Math.abs(item.value) / 20000 + 'px', minHeight: '8px' }"
-                :title="item.value"
-              ></div>
-              <span class="text-xs mt-2 text-gray-600 whitespace-nowrap">{{ item.label }}</span>
+                v-for="(item, idx) in graphData"
+                :key="idx"
+                class="flex flex-col items-center min-w-[48px]"
+                style="z-index:1"
+              >
+                <div
+                  :class="item.value > 0 ? 'bg-[#2F3367]' : 'bg-red-500'"
+                  class="w-8 rounded-t transition-all duration-300 flex items-end justify-center relative"
+                  :style="{
+                    height: maxNominal > 0 ? (Math.abs(item.value) / maxNominal) * 180 + 'px' : '8px',
+                    minHeight: '8px'
+                  }"
+                  :title="item.value"
+                >
+                  <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold"
+                    :class="item.value > 0 ? 'text-[#2F3367]' : 'text-red-500'">
+                    {{ item.value > 0 ? '+Rp' : '-Rp' }}{{ Math.abs(item.value).toLocaleString() }}
+                  </span>
+                </div>
+                <span class="text-xs mt-2 text-gray-600 whitespace-nowrap">{{ item.label }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -151,7 +192,7 @@ onMounted(() => {
                 <td class="px-4 py-2 text-black">{{ trx.deskripsi }}</td>
                 <td class="px-4 py-2 font-bold"
                   :class="trx.jumlah > 0 ? 'text-[#2F3367]' : 'text-red-500'">
-                  {{ trx.jumlah > 0 ? '+' : '-' }}IDR {{ Math.abs(trx.jumlah).toLocaleString() }}
+                  {{ trx.jumlah > 0 ? '+IDR' : '-IDR' }}{{ Math.abs(trx.jumlah).toLocaleString() }}
                 </td>
               </tr>
             </tbody>
