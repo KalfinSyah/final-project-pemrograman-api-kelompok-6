@@ -1,3 +1,12 @@
+<script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const clientId = Number(route.params.id)
+const clients = ref(JSON.parse(localStorage.getItem('clients') || '[]'))
+const client = clients.value.find(c => c.id === clientId)
+</script>
 <template>
   <div class="p-8">
     <h1 class="text-3xl font-bold mb-4">Detail Acara</h1>
@@ -29,12 +38,3 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const clientId = Number(route.params.id)
-const clients = ref(JSON.parse(localStorage.getItem('clients') || '[]'))
-const client = clients.value.find(c => c.id === clientId)
-</script>
