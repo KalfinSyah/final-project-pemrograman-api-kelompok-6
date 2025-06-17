@@ -2,9 +2,9 @@
   import { onMounted, ref } from 'vue'
   import {useRoute} from "vue-router";
   import Swal from 'sweetalert2'
+
   const route = useRoute();
 
-  // Reactive form state
   const form = ref({
     wedding_contract_notes: "",
     reception_notes: "",
@@ -18,35 +18,95 @@
     wedding_location: ""
   })
 
+  const tambahKegiatanForm = ref({
+    isShowing: false,
+    data: {
+        reservation_id: route.params.idAcara,
+        activity_name: '',
+        activity_type: 'Pelaksanaan Acara',  
+        activity_date: '',
+        activity_desc: '',
+        activity_status: 'Pending'
+    }
+  });
+
+  const editModalVisible = ref(false);
+  const editActivityForm = ref({
+  reservation_id: null,
+  activity_name: '',
+  activity_type: '',
+  activity_date: '',
+  activity_desc: '',
+  activity_status: ''
+}); 
+
+
   const submitForm = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
-        method: "PUT",
-        headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
-        body: JSON.stringify(form.value)
-      });
-      if (response.ok) {
-        Swal.fire({
-          title: "Success",
-          icon: "success",
-          text: "Berhasil edit acara!"
-        });
-      } else {
-        Swal.fire({
-          title: "Failed",
-          icon: "error",
-          text: "Gagal edit acara!"
-        });
+      Swal.fire({
+      title: "Anda yakin?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Iya"
+    }).then(async(result) => {
+      if (result.isConfirmed) {
+          try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
+              method: "PUT",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+              body: JSON.stringify(
+                {
+                  reservation_id: editActivityForm.value.reservation_id,
+                  activity_name: editActivityForm.value.activity_name,
+                  activity_type: editActivityForm.value.type,
+                  activity_date: editActivityForm.value.data,
+                  activity_desc: editActivityForm.value.activity_date,
+                  activity_status: editActivityForm.value.activity_status,
+                }
+              )
+            });
+            if (response.ok) {
+              Swal.fire({
+                title: "Terupdate!",
+                text: "Acara berhasil di update",
+                icon: "success"
+              });
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit acara!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit acara! (system error)"
+              });
+          }
       }
-    } catch (error) {
-        Swal.fire({
-          title: "Failed",
-          icon: "error",
-          text: "Gagal edit acara! (system error)"
-        });
+    });
+  }
+
+  function editKegiatan(id) {
+    const target = form.value.activities.find(a => a.activity_id === id);
+    if (target) {
+      editActivityForm.value = { ...target };
+      editModalVisible.value = true;
     }
   }
+
+function closeEditModal() {
+  editModalVisible.value = false;
+  tambahKegiatanForm.value.isShowing = false;
+}
+
+function popupTambahKegiatan(isShowing) {
+  tambahKegiatanForm.value.isShowing = isShowing
+}
 
 async function fetchAcara() {
   try {
@@ -75,78 +135,281 @@ async function fetchAcara() {
   }
 }
 
+async function saveActivityChanges(id) {
+            try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/activities/${id}`, {
+              method: "PUT",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+              body: JSON.stringify(editActivityForm.value)
+            });
+            if (response.ok) {
+              window.location.reload()
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit kegiatan!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit kegiatan! (system error)"
+              });
+          }
+}
+
+async function addActivity() {
+          try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/activities`, {
+              method: "POST",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+              body: JSON.stringify(tambahKegiatanForm.value.data)
+            });
+            if (response.ok) {
+              window.location.reload()
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal tambah kegiatan!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal tambah kegiatan! (system error)"
+              });
+          }
+}
+
 onMounted(() => {
   fetchAcara();
 });
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
-    <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Form Reservasi Pernikahan</h2>
-    <form @submit.prevent="submitForm" class="space-y-4">
+  <div class="max-w-4xl mx-auto p-6 space-y-8">
+    <!-- Reservation Form -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Form Reservasi Pernikahan</h2>
+      <form @submit.prevent="submitForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-gray-700">Nama Gabungan</label>
+          <input v-model="form.combined_name" type="text" class="w-full border rounded px-3 py-2" required />
+        </div>
 
+        <div>
+          <label class="block text-gray-700">Nama Pengantin Pria</label>
+          <input v-model="form.groom" type="text" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Nama Pengantin Wanita</label>
+          <input v-model="form.bride" type="text" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">No. Telepon</label>
+          <input v-model="form.telephone_num" type="text" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Lokasi Pernikahan</label>
+          <input v-model="form.wedding_location" type="text" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Tanggal Pernikahan</label>
+          <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-gray-700">Catatan Akad Nikah</label>
+          <textarea v-model="form.wedding_contract_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+          <label class="block text-gray-700">Catatan Resepsi</label>
+          <textarea v-model="form.reception_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Paket</label>
+          <select v-model="form.wedding_package" class="w-full border rounded px-3 py-2">
+            <option value="A">Paket A</option>
+            <option value="B">Paket B</option>
+            <option value="C">Paket C</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-gray-700">Status</label>
+          <select v-model="form.reservation_status" class="w-full border rounded px-3 py-2">
+            <option value="Berlangsung">Berlangsung</option>
+            <option value="Pending">Pending</option>
+            <option value="Batal">Batal</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </div>
+
+        <div class="col-span-1 md:col-span-2 text-right">
+          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Simpan
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div @click="popupTambahKegiatan(true)" class="col-span-1 md:col-span-2 text-right mt-2">
+      <button class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Tambah Kegiatan
+      </button>
+    </div>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Jadwal Kegiatan</h2>
+
+    <div v-if="form.activities && form.activities.length > 0" class="space-y-4">
+      <div
+        v-for="activity in form.activities"
+        :key="activity.activity_id"
+        class="relative border-l-4 pl-4 border-blue-500 bg-gray-50 p-4 rounded"
+      >
+        <!-- Edit Button -->
+        <button
+          @click="editKegiatan(activity.activity_id)"
+          class="absolute top-3 right-3 text-sm text-blue-600 hover:underline hover:text-blue-800"
+        >
+          Edit
+        </button>
+
+        <p class="text-sm text-gray-500">
+          {{ new Date(activity.activity_date).toLocaleDateString() }}
+        </p>
+        <h3 class="font-semibold text-lg text-blue-700">
+          {{ activity.activity_name }}
+        </h3>
+        <p class="text-sm text-gray-600 italic">
+          {{ activity.activity_type }}
+        </p>
+        <p class="text-gray-700 mt-2">
+          {{ activity.activity_desc }}
+        </p>
+        <span
+          class="inline-block mt-2 px-3 py-1 text-xs rounded-full"
+          :class="{
+            'bg-yellow-200 text-yellow-800': activity.activity_status === 'Pending',
+            'bg-green-200 text-green-800': activity.activity_status === 'Completed',
+            'bg-red-200 text-red-800': activity.activity_status === 'Cancelled'
+          }"
+        >
+          {{ activity.activity_status }}
+        </span>
+      </div>
+    </div>
+
+    <div v-else class="text-gray-500 text-sm italic">Belum ada kegiatan yang terdaftar.</div>
+  </div>
+
+
+  <!-- Modal -->
+<div v-if="editModalVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Edit Kegiatan</h2>
+
+    <div class="space-y-4">
       <div>
-        <label class="block text-gray-700">Nama Gabungan</label>
-        <input v-model="form.combined_name" type="text" class="w-full border rounded px-3 py-2" required />
+        <label class="block text-gray-700">Nama Kegiatan</label>
+        <input v-model="editActivityForm.activity_name" type="text" class="w-full border rounded px-3 py-2" />
       </div>
 
       <div>
-        <label class="block text-gray-700">Nama Pengantin Pria</label>
-        <input v-model="form.groom" type="text" class="w-full border rounded px-3 py-2" required />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Nama Pengantin Wanita</label>
-        <input v-model="form.bride" type="text" class="w-full border rounded px-3 py-2" required />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">No. Telepon</label>
-        <input v-model="form.telephone_num" type="text" class="w-full border rounded px-3 py-2" required />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Lokasi Pernikahan</label>
-        <input v-model="form.wedding_location" type="text" class="w-full border rounded px-3 py-2" required />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Tanggal Pernikahan</label>
-        <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Catatan Akad Nikah</label>
-        <textarea v-model="form.wedding_contract_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Catatan Resepsi</label>
-        <textarea v-model="form.reception_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Paket</label>
-        <select v-model="form.wedding_package" class="w-full border rounded px-3 py-2">
-          <option value="A">Paket A</option>
-          <option value="B">Paket B</option>
-          <option value="C">Paket C</option>
+        <label class="block text-gray-700">Jenis Kegiatan</label>
+        <select v-model="editActivityForm.activity_type" class="w-full border rounded px-3 py-2">
+          <option value="Reservasi Lokasi">Reservasi Lokasi</option>
+          <option value="Pemesanan Katering">Pemesanan Katering</option>
+          <option value="Koordinasi Staff">Koordinasi Staff</option>
+          <option value="Pelaksanaan Acara">Pelaksanaan Acara</option>
         </select>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Tanggal</label>
+        <input v-model="editActivityForm.activity_date" type="date" class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Deskripsi</label>
+        <textarea v-model="editActivityForm.activity_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
       </div>
 
       <div>
         <label class="block text-gray-700">Status</label>
-        <select v-model="form.reservation_status" class="w-full border rounded px-3 py-2">
-          <option value="Berlangsung">Berlangsung</option>
+        <select v-model="editActivityForm.activity_status" class="w-full border rounded px-3 py-2">
+          <option value="Pending">Pending</option>
           <option value="Selesai">Selesai</option>
+          <option value="Batal">Batal</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end space-x-2">
+      <button @click="closeEditModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+      <button @click="saveActivityChanges(editActivityForm.activity_id)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div v-if="tambahKegiatanForm.isShowing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Tambah Kegiatan</h2>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-gray-700">Nama Kegiatan</label>
+        <input v-model="tambahKegiatanForm.data.activity_name" type="text" class="w-full border rounded px-3 py-2" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Jenis Kegiatan</label>
+        <select v-model="tambahKegiatanForm.data.activity_type" class="w-full border rounded px-3 py-2">
+          <option value="Reservasi Lokasi">Reservasi Lokasi</option>
+          <option value="Pemesanan Katering">Pemesanan Katering</option>
+          <option value="Koordinasi Staff">Koordinasi Staff</option>
+          <option value="Pelaksanaan Acara">Pelaksanaan Acara</option>
         </select>
       </div>
 
-      <div class="text-right">
-        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Simpan
-        </button>
+      <div>
+        <label class="block text-gray-700">Tanggal</label>
+        <input v-model="tambahKegiatanForm.data.activity_date" type="date" class="w-full border rounded px-3 py-2" />
       </div>
-    </form>
+
+      <div>
+        <label class="block text-gray-700">Deskripsi</label>
+        <textarea v-model="tambahKegiatanForm.data.activity_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Status</label>
+        <select v-model="tambahKegiatanForm.data.activity_status" class="w-full border rounded px-3 py-2">
+          <option value="Pending">Pending</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Batal">Batal</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end space-x-2">
+      <button @click="closeEditModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+      <button @click="addActivity" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tambah</button>
+    </div>
+  </div>
+</div>
+
   </div>
 </template>

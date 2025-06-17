@@ -163,7 +163,7 @@ onMounted(() => {
       </div>
 
       <!-- Riwayat Acara -->
-      <div class="bg-white rounded-2xl shadow-lg p-8">
+      <div class="bg-white rounded-2xl shadow-lg p-8 text-black">
         <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Riwayat Acara</h2>
         <div class="overflow-x-auto">
           <table class="min-w-full text-left border-separate border-spacing-y-2">
