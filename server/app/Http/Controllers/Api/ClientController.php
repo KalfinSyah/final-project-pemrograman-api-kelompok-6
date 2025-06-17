@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\ReservationResource;
 
 class ClientController extends Controller
 {
@@ -14,7 +15,19 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return ClientResource::collection(Client::all());
+        // return ClientResource::collection(Client::all());
+        $client_active = Client::whereHas('reservations', function ($query) {
+            $query->whereIn('reservation_status', ['berlangsung', 'pending']);
+        })->get();
+
+        $client_inactive = Client::whereDoesntHave('reservations', function ($query) {
+            $query->whereIn('reservation_status', ['berlangsung', 'pending']);
+        })->get();
+
+        return response()->json([
+            'client_active' => $client_active,
+            'client_inactive' => $client_inactive,
+        ]);
     }
 
     /**
@@ -78,11 +91,23 @@ class ClientController extends Controller
             'message' => 'Client berhasil dihapus.'
         ]);
 
-        $reservations = $client->reservations()->pluck('id');
+        // $reservations = $client->reservations()->pluck('id');
 
         // return response()->json([
         //     'message' => 'Client ini digunakan pada reservasi berikut.',
         //     'reservations' => $reservations,
         // ], 409);
+    }
+
+    public function reservations($id)
+    {
+        $client = Client::with('reservations')->findOrFail($id);
+
+        // return ReservationResource::collection($client->reservations);
+
+        return response()->json([
+            'client' => $client->only(['id', 'combined_name']),
+            'reservations' => $client->reservations
+        ]);
     }
 }
