@@ -18,8 +18,15 @@ const checklistItems = ref([
   'Pelaksanaan Acara'
 ])
 
-const showEventModal = ref(false)
-const selectedEvent = ref({})
+const reservation = ref(null)
+const eventName = ref('Belum tersedia')
+const eventDate = ref('Belum tersedia')
+const currentTask = ref('Belum tersedia')
+const taskDate = ref('Belum tersedia')
+const cashIn = ref(0)
+const cashOut = ref(0)
+const eventLocation = ref('Belum tersedia')
+const reservationStatus = ref('Belum tersedia')
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
@@ -54,10 +61,10 @@ const calendarOptions = ref({
   }
 })
 
-async function fetchActivities() {
+async function fetchDashboardData() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/all-activities`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/nearestReservation`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -66,19 +73,53 @@ async function fetchActivities() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    calendarOptions.value.events = (data.data || []).map(item => ({
-      title: item.activity_name || item.activity_type,
-      date: item.activity_date,
-      description: item.activity_desc,
-      allDay: true 
-    }))
+    reservation.value = data.data;
+
+    eventName.value = data.data?.combined_name || 'Belum tersedia';
+    eventDate.value = data.data?.wedding_date || 'Belum tersedia';
+
+    if (data.data?.activities && data.data.activities.length > 0) {
+      // Show the nearest activity that is not "Selesai"
+      const nextActivity = data.data.activities.find(a => a.activity_status !== 'Selesai');
+      currentTask.value = nextActivity?.activity_name || 'Belum tersedia';
+      taskDate.value = nextActivity?.activity_date || 'Belum tersedia';
+    } else {
+      currentTask.value = 'Belum tersedia';
+      taskDate.value = 'Belum tersedia';
+    }
+
+    cashIn.value = Number(data.data?.cashflow_in) || 0;
+    cashOut.value = Number(data.data?.cashflow_out) || 0;
+
+    if (data.data?.activities && data.data.activities.length > 0) {
+      calendarOptions.value.events = data.data.activities.map(item => ({
+        title: item.activity_name || item.activity_type,
+        date: item.activity_date,
+        description: item.activity_desc,
+        allDay: true
+      }))
+    } else {
+      calendarOptions.value.events = []
+    }
+
+    eventLocation.value = data.data?.wedding_location || 'Belum tersedia'
+    reservationStatus.value = data.data?.reservation_status || 'Belum tersedia' // <-- Add this line
   } catch (err) {
-    console.error('Failed to fetch activities:', err)
+    eventName.value = 'Belum tersedia'
+    eventDate.value = 'Belum tersedia'
+    currentTask.value = 'Belum tersedia'
+    taskDate.value = 'Belum tersedia'
+    cashIn.value = 0
+    cashOut.value = 0
+    calendarOptions.value.events = []
+    eventLocation.value = 'Belum tersedia'
+    reservationStatus.value = 'Belum tersedia'
+    console.error('Failed to fetch dashboard data:', err)
   }
 }
 
 onMounted(() => {
-  fetchActivities()
+  fetchDashboardData()
 })
 </script>
 
@@ -90,12 +131,14 @@ onMounted(() => {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 items-stretch">
         <ProgressCircle :value="75" />
         <EventCard
-          currentEvent="Putri & Putra"
-          date="1 May 2025"
-          currentTask="Pelaksanaan Acara"
-          taskDate="1 May 2025"
+          :currentEvent="eventName"
+          :date="eventDate"
+          :currentTask="currentTask"
+          :taskDate="taskDate"
+          :location="eventLocation"
+          :reservation_status="reservationStatus"
         />
-        <CashflowCard :masuk="1500000" :keluar="1000000" />
+        <CashflowCard :masuk="cashIn" :keluar="cashOut" />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
         <ChecklistCard :items="checklistItems" />
