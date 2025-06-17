@@ -1,117 +1,152 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import Sidebar from '../../components/Sidebar.vue'
-import DashboardHeader from '../../components/DashboardHeader.vue'
-import ProgressCircle from '../../components/ProgresCircle.vue'
-import EventCard from '../../components/EventCard.vue'
-import CashflowCard from '../../components/CashflowCard.vue'
-import ChecklistCard from '../../components/ChecklistCard.vue'
-import CalendarCard from '../../components/Calendar.vue'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import Swal from 'sweetalert2'
+  import { onMounted, ref } from 'vue'
+  import {useRoute} from "vue-router";
+  import Swal from 'sweetalert2'
+  const route = useRoute();
 
-const checklistItems = ref([
-  'Reservasi lokasi',
-  'Pemesan Katering',
-  'Koordinasi Staff',
-  'Pelaksanaan Acara'
-])
+  // Reactive form state
+  const form = ref({
+    wedding_contract_notes: "",
+    reception_notes: "",
+    wedding_package: "A",
+    wedding_date: "",
+    reservation_status: "Berlangsung",
+    combined_name: "",
+    groom: "",
+    bride: "",
+    telephone_num: "",
+    wedding_location: ""
+  })
 
-const showEventModal = ref(false)
-const selectedEvent = ref({})
-
-const calendarOptions = ref({
-  plugins: [dayGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
-  dayMaxEventRows: true,
-  views: {
-    timeGrid: {
-      dayMaxEventRows: 3
-    }
-  },
-  locale: 'id',
-  headerToolbar: {
-    today: 'Hari Ini',
-  },
-  events: [],
-  eventClick: function(info) {
-    Swal.fire({
-      title: `<span style="color:#2F3367">${info.event.title}</span>`,
-      html: `
-        <div style="text-align:left">
-          <b>Tanggal:</b> ${info.event.startStr}<br>
-          <b>Deskripsi:</b> <span style="color:#222">${info.event.extendedProps.description || '-'}</span>
-        </div>
-      `,
-      confirmButtonText: 'Tutup',
-      confirmButtonColor: '#2F3367',
-      background: '#fff',
-      customClass: {
-        popup: 'rounded-xl'
+  const submitForm = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify(form.value)
+      });
+      if (response.ok) {
+        Swal.fire({
+          title: "Success",
+          icon: "success",
+          text: "Berhasil edit acara!"
+        });
+      } else {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal edit acara!"
+        });
       }
-    });
+    } catch (error) {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal edit acara! (system error)"
+        });
+    }
   }
-})
 
-async function fetchActivities() {
+async function fetchAcara() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/all-activities`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal fetch acara!"
+        });
+    } else {
+      const data = await response.json();
+      form.value = data.data
     }
-    const data = await response.json();
-    calendarOptions.value.events = (data.data || []).map(item => ({
-      title: item.activity_name || item.activity_type,
-      date: item.activity_date,
-      description: item.activity_desc,
-      allDay: true 
-    }))
   } catch (err) {
-    console.error('Failed to fetch activities:', err)
+    Swal.fire({
+      title: "Failed",
+      icon: "error",
+      text: "Gagal fetch acara! (system)"
+    });
   }
 }
 
 onMounted(() => {
-  fetchActivities()
-})
+  fetchAcara();
+});
 </script>
 
 <template>
-  <div class="bg-[#e8eaf6] min-h-screen">
-    <Sidebar />
-    <div class="ml-64 p-8">
-      <DashboardHeader />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 items-stretch">
-        <ProgressCircle :value="75" />
-        <EventCard
-          currentEvent="Putri & Putra"
-          date="1 May 2025"
-          currentTask="Pelaksanaan Acara"
-          taskDate="1 May 2025"
-        />
-        <CashflowCard :masuk="1500000" :keluar="1000000" />
+  <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
+    <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Form Reservasi Pernikahan</h2>
+    <form @submit.prevent="submitForm" class="space-y-4">
+
+      <div>
+        <label class="block text-gray-700">Nama Gabungan</label>
+        <input v-model="form.combined_name" type="text" class="w-full border rounded px-3 py-2" required />
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        <ChecklistCard :items="checklistItems" />
-        <CalendarCard :options="calendarOptions" />
+
+      <div>
+        <label class="block text-gray-700">Nama Pengantin Pria</label>
+        <input v-model="form.groom" type="text" class="w-full border rounded px-3 py-2" required />
       </div>
-    </div>
+
+      <div>
+        <label class="block text-gray-700">Nama Pengantin Wanita</label>
+        <input v-model="form.bride" type="text" class="w-full border rounded px-3 py-2" required />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">No. Telepon</label>
+        <input v-model="form.telephone_num" type="text" class="w-full border rounded px-3 py-2" required />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Lokasi Pernikahan</label>
+        <input v-model="form.wedding_location" type="text" class="w-full border rounded px-3 py-2" required />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Tanggal Pernikahan</label>
+        <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Catatan Akad Nikah</label>
+        <textarea v-model="form.wedding_contract_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Catatan Resepsi</label>
+        <textarea v-model="form.reception_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Paket</label>
+        <select v-model="form.wedding_package" class="w-full border rounded px-3 py-2">
+          <option value="A">Paket A</option>
+          <option value="B">Paket B</option>
+          <option value="C">Paket C</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Status</label>
+        <select v-model="form.reservation_status" class="w-full border rounded px-3 py-2">
+          <option value="Berlangsung">Berlangsung</option>
+          <option value="Selesai">Selesai</option>
+        </select>
+      </div>
+
+      <div class="text-right">
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Simpan
+        </button>
+      </div>
+    </form>
   </div>
 </template>
-
-<style>
-.fc-daygrid-event {
-  background-color: #2F3367 !important;
-  color: #fff !important;
-  border-radius: 6px !important;
-  border: none !important;
-  padding: 2px 6px !important;
-  font-size: 13px !important;
-}
-</style>

@@ -25,7 +25,7 @@ const router = createRouter({
     { path: '/view', name: 'view', component: ViewAcara },
     { path: '/edit', name: 'edit', component: EditAcara },
     { path: '/pengaturan', name: 'pengaturan', component: Pengaturan },
-    { path: '/editAcara', name: 'edit-acara', component: EditAcara },
+    { path: '/editAcara/:idAcara', name: 'edit-acara', component: EditAcara },
     { path: '/viewAcara', name: 'view-acara', component: ViewAcara }
   ]
 })

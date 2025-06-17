@@ -14,7 +14,7 @@ const form = ref({
 })
 
 const editForm = ref({
-  id: null,
+  id: '',
   type: '',
   name: '',
 })
@@ -64,8 +64,15 @@ const addVendor = async () => {
   }
 }
 
-// PUT - Simpan perubahan vendor
+
+
+
 const updateVendor = async () => {
+  if (!editForm.value.id) {
+    alert('ID vendor tidak ditemukan.')
+    return
+  }
+
   try {
     const res = await fetch(`${API_URL}/${editForm.value.id}`, {
       method: 'PUT',
@@ -78,6 +85,14 @@ const updateVendor = async () => {
         vendor_brand: editForm.value.name,
       })
     })
+
+    const contentType = res.headers.get("content-type")
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await res.text()
+      console.error("Bukan response JSON:", text)
+      throw new Error("Invalid JSON response")
+    }
+
     const data = await res.json()
     if (res.ok) {
       fetchVendors()
@@ -86,7 +101,7 @@ const updateVendor = async () => {
       alert('Gagal update vendor: ' + data.message)
     }
   } catch (error) {
-    console.error(error)
+    console.error("Error update vendor:", error)
   }
 }
 
