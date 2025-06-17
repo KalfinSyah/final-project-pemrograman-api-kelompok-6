@@ -9,6 +9,7 @@ import ChecklistCard from '../../components/ChecklistCard.vue'
 import CalendarCard from '../../components/Calendar.vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import Swal from 'sweetalert2'
 
 const checklistItems = ref([
   'Reservasi lokasi',
@@ -35,12 +36,21 @@ const calendarOptions = ref({
   },
   events: [],
   eventClick: function(info) {
-    selectedEvent.value = {
-      title: info.event.title,
-      date: info.event.startStr,
-      description: info.event.extendedProps.description
-    }
-    showEventModal.value = true
+    Swal.fire({
+      title: `<span style="color:#2F3367">${info.event.title}</span>`,
+      html: `
+        <div style="text-align:left">
+          <b>Tanggal:</b> ${info.event.startStr}<br>
+          <b>Deskripsi:</b> <span style="color:#222">${info.event.extendedProps.description || '-'}</span>
+        </div>
+      `,
+      confirmButtonText: 'Tutup',
+      confirmButtonColor: '#2F3367',
+      background: '#fff',
+      customClass: {
+        popup: 'rounded-xl'
+      }
+    });
   }
 })
 
@@ -90,16 +100,6 @@ onMounted(() => {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
         <ChecklistCard :items="checklistItems" />
         <CalendarCard :options="calendarOptions" />
-      </div>
-    </div>
-
-    <!-- Event Detail Modal -->
-    <div v-if="showEventModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div class="bg-white rounded-xl shadow-lg p-8 min-w-[320px] max-w-md">
-        <h2 class="text-2xl font-bold text-[#2F3367] mb-4">{{ selectedEvent.title }}</h2>
-        <div class="mb-2"><span class="font-semibold">Tanggal:</span> {{ selectedEvent.date }}</div>
-        <div class="mb-4"><span class="font-semibold">Deskripsi:</span> {{ selectedEvent.description || '-' }}</div>
-        <button @click="showEventModal = false" class="mt-4 px-4 py-2 bg-[#2F3367] text-white rounded hover:bg-[#404488]">Tutup</button>
       </div>
     </div>
   </div>
