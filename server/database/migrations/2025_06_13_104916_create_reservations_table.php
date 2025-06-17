@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('client_id')->constrained()->onDelete('restrict');
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
+            $table->string('combined_name', 255);
+            $table->string('groom', 255);
+            $table->string('bride', 255);
+            $table->string('telephone_num', 255);
             $table->text('wedding_contract_notes');
             $table->text('reception_notes');
             $table->decimal('cashflow_in', 15, 2)->nullable();

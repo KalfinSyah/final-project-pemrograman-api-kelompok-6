@@ -27,6 +27,10 @@ class ReservationResource extends JsonResource
             'wedding_package' => $this->wedding_package,
             'wedding_date' => $this->wedding_date,
             'reservation_status' => $this->reservation_status,
+            'combined_name' => $this->combined_name,
+            'groom' => $this->groom,
+            'bride' => $this->bride,
+            'telephone_num' => $this->telephone_num,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

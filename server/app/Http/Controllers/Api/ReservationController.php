@@ -16,7 +16,7 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::with(['client', 'user', 'vendors', 'updatedBy'])->get();
+        $reservations = Reservation::with(['user', 'vendors', 'updatedBy'])->get();
         return ReservationResource::collection($reservations);
     }
 
@@ -26,7 +26,6 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'client_id' => 'required|exists:clients,id',
             'wedding_contract_notes' => 'required|string',
             'reception_notes' => 'required|string',
             'wedding_package' => [
@@ -40,6 +39,10 @@ class ReservationController extends Controller
             'wedding_date' => 'required|date',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
+            'combined_name' => 'required|string',
+            'groom' => 'required|string',
+            'bride' => 'required|string',
+            'telephone_num' => 'required|string|max:15'
         ]);
 
         $validated['user_id'] = $request->user()->id;
@@ -60,7 +63,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation->load(['client', 'user', 'vendors', 'updatedBy']);
+        $reservation->load(['user', 'vendors', 'updatedBy']);
         return new ReservationResource($reservation);
     }
 
@@ -85,6 +88,10 @@ class ReservationController extends Controller
             'wedding_date' => 'sometimes|required|date',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
+            'combined_name' => 'sometimes|required|string',
+            'groom' => 'sometimes|required|string',
+            'bride' => 'sometimes|required|string',
+            'telephone_num' => 'sometimes|required|string|max:15'
         ]);
 
         $validated['updated_by'] = $request->user()->id;

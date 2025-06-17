@@ -19,7 +19,11 @@ class Reservation extends Model
         'cashflow_out',
         'wedding_package',
         'wedding_date',
-        'reservation_status'
+        'reservation_status',
+        'combined_name',
+        'groom',
+        'bride',
+        'telephone_num'
     ];
 
     public const PACKAGES = [
@@ -37,10 +41,6 @@ class Reservation extends Model
         'Batal',
     ];
 
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
     public function user()
     {
         return $this->belongsTo(User::class);
