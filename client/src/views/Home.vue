@@ -80,7 +80,7 @@ const services = {
 const courusel = [
   new URL('../assets/carousel/1.png', import.meta.url).href,
   new URL('../assets/carousel/2.jpg', import.meta.url).href,
-  new URL('../assets/carousel/3.png', import.meta.url).href,
+  new URL('../assets/carousel/3.jpg', import.meta.url).href,
 ];
 const pricelist = [
   {
@@ -468,7 +468,7 @@ watchEffect(() => {
   width: 100%;
   height: 100%;
   object-fit: cover; 
-  filter: blur(1.5px);
+ 
 }
 #carousel > img:nth-child(2) {
   position: absolute;
