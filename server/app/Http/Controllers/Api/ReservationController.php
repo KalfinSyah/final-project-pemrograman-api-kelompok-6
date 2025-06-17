@@ -63,7 +63,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation->load(['user', 'vendors', 'updatedBy']);
+        $reservation->load(['user', 'vendors', 'updatedBy', 'cashflows', 'activities']);
         return new ReservationResource($reservation);
     }
 
