@@ -81,12 +81,16 @@
               headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
               body: JSON.stringify(
                 {
-                  reservation_id: editActivityForm.value.reservation_id,
-                  activity_name: editActivityForm.value.activity_name,
-                  activity_type: editActivityForm.value.type,
-                  activity_date: editActivityForm.value.data,
-                  activity_desc: editActivityForm.value.activity_date,
-                  activity_status: editActivityForm.value.activity_status,
+                  wedding_contract_notes: form.value.wedding_contract_notes,
+                  reception_notes: form.value.reception_notes,
+                  wedding_package: form.value.wedding_package,
+                  wedding_date : form.value.wedding_package,
+                  reservation_status : form.value.reservation_status,
+                  combined_name : form.value.combined_name,
+                  groom : form.value.groom,
+                  bride : form.value.bride,
+                  telephone_num : form.value.telephone_num,
+                  wedding_location : form.value.wedding_location
                 }
               )
             });
