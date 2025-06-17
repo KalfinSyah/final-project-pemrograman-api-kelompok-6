@@ -176,7 +176,7 @@ onMounted(() => {
                     Edit
                   </button> -->
                   <button @click='router.push({name: "edit-acara", params: {
-                    
+                    idAcara: client.reservation_id
                   }})' class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
                     Edit
                   </button>
@@ -276,46 +276,6 @@ onMounted(() => {
           <div class="flex justify-end gap-2">
             <button type="button" @click="showForm = false" class="px-4 py-2 rounded border">Batal</button>
             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal Edit -->
-    <div v-if="isEditing" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div class="bg-white p-8 rounded-xl w-full max-w-3xl shadow-xl relative">
-        <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Edit Acara</h2>
-        <form @submit.prevent="updateClient">
-          <div class="mb-4">
-            <label class="block text-gray-700">Nama</label>
-            <input v-model="editingClient.name" type="text" class="w-full border rounded px-3 py-2" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">No. Telp</label>
-            <input v-model="editingClient.phone" type="text" class="w-full border rounded px-3 py-2" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Paket</label>
-            <select v-model="editingClient.paket" class="w-full border rounded px-3 py-2">
-              <option value="A">Paket A</option>
-              <option value="B">Paket B</option>
-              <option value="C">Paket C</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Tanggal</label>
-            <input v-model="editingClient.tanggal" type="date" class="w-full border rounded px-3 py-2" required />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Status</label>
-            <select v-model="editingClient.status" class="w-full border rounded px-3 py-2">
-              <option value="Berlangsung">Berlangsung</option>
-              <option value="Selesai">Selesai</option>
-            </select>
-          </div>
-          <div class="flex justify-end gap-2">
-            <button type="button" @click="isEditing = false" class="px-4 py-2 rounded border">Batal</button>
-            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">Simpan Perubahan</button>
           </div>
         </form>
       </div>
