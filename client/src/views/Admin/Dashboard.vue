@@ -23,13 +23,24 @@ const reservationStatus = ref('Belum tersedia')
 
 // Activities for checklist and progress
 const allActivities = ref([])
-const completedActivities = computed(() =>
-  allActivities.value.filter(a => a.activity_status === 'Selesai')
+
+// Only activities that are NOT "Batal"
+const filteredActivities = computed(() =>
+  allActivities.value.filter(a => a.activity_status !== 'Batal')
 )
-const checklistItems = computed(() => allActivities.value.map(a => a.activity_name))
+
+// Only completed and not "Batal"
+const completedActivities = computed(() =>
+  filteredActivities.value.filter(a => a.activity_status === 'Selesai')
+)
+
+// For checklist display
+const checklistItems = computed(() => filteredActivities.value.map(a => a.activity_name))
+
+// Progress calculation (exclude "Batal")
 const progressValue = computed(() =>
-  allActivities.value.length > 0
-    ? Math.round((completedActivities.value.length / allActivities.value.length) * 100)
+  filteredActivities.value.length > 0
+    ? Math.round((completedActivities.value.length / filteredActivities.value.length) * 100)
     : 0
 )
 
@@ -99,13 +110,16 @@ async function fetchDashboardData() {
     cashIn.value = Number(data.data?.cashflow_in) || 0;
     cashOut.value = Number(data.data?.cashflow_out) || 0;
 
+    // Only show activities that are NOT "Batal" in the calendar
     if (allActivities.value.length > 0) {
-      calendarOptions.value.events = allActivities.value.map(item => ({
-        title: item.activity_name || item.activity_type,
-        date: item.activity_date,
-        description: item.activity_desc,
-        allDay: true
-      }))
+      calendarOptions.value.events = allActivities.value
+        .filter(item => item.activity_status !== 'Batal')
+        .map(item => ({
+          title: item.activity_name || item.activity_type,
+          date: item.activity_date,
+          description: item.activity_desc,
+          allDay: true
+        }))
     } else {
       calendarOptions.value.events = []
     }
