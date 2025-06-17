@@ -284,6 +284,7 @@ watchEffect(() => {
 <div id="nav">
   <!-- <div>Ruang Hati</div> -->
   <!-- <img src="../assets/logo.png" alt=""> -->
+  <img src="../assets/logo.png" alt="">
   <ul>
     <li><a href="#services">services</a></li>
     <li><a href="#pricelist">pricelist</a></li>
@@ -294,11 +295,12 @@ watchEffect(() => {
 </div>  
 
 <div id="carousel">
+
   <transition name="fade" mode="out-in">
+  
     <img :key="couruselIndex" :src="courusel[couruselIndex]" alt="carousel image" />
   </transition>
 
-  <img src="../assets/logo.png" alt="">
 </div>
 
 <div id="content">
