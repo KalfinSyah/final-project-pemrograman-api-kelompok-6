@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
 import DashboardHeader from '../../components/DashboardHeader.vue'
 import router from '../../router';
+import Swal from 'sweetalert2'
 
 // State form tambah
 const showForm = ref(false)
@@ -20,11 +21,16 @@ const editingClient = ref({
 
 // Data form tambah
 const form = ref({
-  name: '',
-  phone: '',
-  paket: 'A',
-  tanggal: '',
-  status: 'Berlangsung'
+  wedding_contract_notes: "",
+  reception_notes: "",
+  wedding_package: "A",
+  wedding_date: "",
+  reservation_status : "Berlangsung",
+  combined_name: "",
+  groom: "",
+  bride: "",
+  telephone_num : "",
+  wedding_location : ""
 })
 
 // List client aktif & riwayat
@@ -33,17 +39,36 @@ const currentClients = ref([])
 const clientHistory = ref([])
 
 // Fungsi tambah client
-const addClient = () => {
-  const newClient = { ...form.value, id: Date.now() }
-  currentClients.value.push(newClient)
-  form.value = {
-    name: '',
-    phone: '',
-    paket: 'A',
-    tanggal: '',
-    status: 'Berlangsung'
-  }
+const addClient = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify(form.value)
+      });
+      if (response.ok) {
+        Swal.fire({
+          title: "Success",
+          icon: "success",
+          text: "Berhasil tambah acara!"
+        });
+      } else {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal tambah acara!"
+        });
+      }
+    } catch (error) {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal tambah acara!"
+        });
+    }
   showForm.value = false
+  window.location.reload()
 }
 
 // Fungsi mulai edit
@@ -64,7 +89,7 @@ const updateClient = () => {
 async function fetchAcaraSaatIni() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/upcoming`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -73,7 +98,26 @@ async function fetchAcaraSaatIni() {
       alert('fetch event failed');
     } else {
       const data = await response.json();
-      currentClients.value = data.data
+      currentClients.value = data.active_reservations
+    }
+  } catch (err) {
+    alert('error system')
+  }
+}
+
+async function fetchRiwayatAcara() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      alert('fetch event failed');
+    } else {
+      const data = await response.json();
+      clientHistory.value = data.inactive_reservations
     }
   } catch (err) {
     alert('error system')
@@ -81,8 +125,11 @@ async function fetchAcaraSaatIni() {
 }
 
 
+
+
 onMounted(() => {
   fetchAcaraSaatIni();
+  fetchRiwayatAcara();
 });
 </script>
 
@@ -161,12 +208,12 @@ onMounted(() => {
                 <td colspan="6" class="px-4 py-2 text-center text-gray-400">Belum ada riwayat klien.</td>
               </tr>
               <tr v-for="client in clientHistory" :key="client.id" class="bg-gray-100">
-                <td class="px-4 py-2">{{ client.id }}</td>
-                <td class="px-4 py-2">{{ client.name }}</td>
-                <td class="px-4 py-2">{{ client.phone }}</td>
-                <td class="px-4 py-2">{{ client.paket }}</td>
-                <td class="px-4 py-2">{{ client.tanggal }}</td>
-                <td class="px-4 py-2">{{ client.status }}</td>
+                <td class="px-4 py-2">{{ client.reservation_id }}</td>
+                <td class="px-4 py-2">{{ client.combined_name }}</td>
+                <td class="px-4 py-2">{{ client.telephone_num }}</td>
+                <td class="px-4 py-2">{{ client.wedding_package }}</td>
+                <td class="px-4 py-2">{{ client.wedding_date }}</td>
+                <td class="px-4 py-2">{{ client.reservation_status }}</td>
               </tr>
             </tbody>
           </table>
@@ -181,15 +228,35 @@ onMounted(() => {
         <form @submit.prevent="addClient">
           <div class="mb-4">
             <label class="block text-gray-700">Nama</label>
-            <input v-model="form.name" type="text" class="w-full border rounded px-3 py-2" required />
+            <input v-model="form.combined_name" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+            <div class="mb-4">
+            <label class="block text-gray-700">Nama Pempelai Laki</label>
+            <input v-model="form.groom" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Nama Pempelai Wanita</label>
+            <input v-model="form.bride" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Lokasi Pernikahan</label>
+            <input v-model="form.wedding_location" type="text" class="w-full border rounded px-3 py-2" required />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">No. Telp</label>
-            <input v-model="form.phone" type="text" class="w-full border rounded px-3 py-2" required />
+            <input v-model="form.telephone_num" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Wedding Contract Notes</label>
+            <input v-model="form.wedding_contract_notes" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Reception Notes</label>
+            <input v-model="form.reception_notes" type="text" class="w-full border rounded px-3 py-2" required />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">Paket</label>
-            <select v-model="form.paket" class="w-full border rounded px-3 py-2">
+            <select v-model="form.wedding_package" class="w-full border rounded px-3 py-2">
               <option value="A">Paket A</option>
               <option value="B">Paket B</option>
               <option value="C">Paket C</option>
@@ -197,11 +264,11 @@ onMounted(() => {
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">Tanggal</label>
-            <input v-model="form.tanggal" type="date" class="w-full border rounded px-3 py-2" required />
+            <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">Status</label>
-            <select v-model="form.status" class="w-full border rounded px-3 py-2">
+            <select v-model="form.reservation_status" class="w-full border rounded px-3 py-2">
               <option value="Berlangsung">Berlangsung</option>
               <option value="Selesai">Selesai</option>
             </select>
