@@ -64,9 +64,6 @@ const addVendor = async () => {
   }
 }
 
-
-
-
 const updateVendor = async () => {
   if (!editForm.value.id) {
     alert('ID vendor tidak ditemukan.')
@@ -108,7 +105,7 @@ const updateVendor = async () => {
 // Buka form edit
 const editVendor = (vendor) => {
   editForm.value = {
-    id: vendor.id,
+    id: vendor.vendor_id, // Use vendor_id from API
     type: vendor.vendor_type,
     name: vendor.vendor_brand
   }
@@ -149,7 +146,7 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(vendor, index) in vendors" :key="vendor.id" class="bg-gray-100 text-black">
+              <tr v-for="(vendor, index) in vendors" :key="vendor.vendor_id" class="bg-gray-100 text-black">
                 <td class="px-4 py-2">{{ index + 1  }}</td>
                 <td class="px-4 py-2">{{ vendor.vendor_type }}</td>
                 <td class="px-4 py-2">{{ vendor.vendor_brand }}</td>
