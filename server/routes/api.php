@@ -41,7 +41,10 @@ Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
     Route::get('/reservations/{id}/cashflows', [ReservationController::class, 'cashflows']);
 
     Route::apiResource('vendors', VendorController::class);
+
     Route::apiResource('reservations', ReservationController::class);
+    Route::get('/nearestReservation', [ReservationController::class, 'showClosest']);
+
     Route::apiResource('cashflows', CashflowController::class);
     Route::get('/recentCashflows', [CashflowController::class, 'recentCashflows']);
 });

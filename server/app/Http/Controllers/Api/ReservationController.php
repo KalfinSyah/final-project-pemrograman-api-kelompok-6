@@ -42,7 +42,8 @@ class ReservationController extends Controller
             'combined_name' => 'required|string',
             'groom' => 'required|string',
             'bride' => 'required|string',
-            'telephone_num' => 'required|string|max:15'
+            'telephone_num' => 'required|string|max:15',
+            'wedding_location' => 'sometimes|string|max:255'
         ]);
 
         $validated['user_id'] = $request->user()->id;
@@ -63,7 +64,7 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        $reservation->load(['user', 'vendors', 'updatedBy']);
+        $reservation->load(['user', 'vendors', 'updatedBy', 'cashflows', 'activities']);
         return new ReservationResource($reservation);
     }
 
@@ -91,7 +92,8 @@ class ReservationController extends Controller
             'combined_name' => 'sometimes|required|string',
             'groom' => 'sometimes|required|string',
             'bride' => 'sometimes|required|string',
-            'telephone_num' => 'sometimes|required|string|max:15'
+            'telephone_num' => 'sometimes|required|string|max:15',
+            'wedding_location' => 'sometimes|string|max:255'
         ]);
 
         $validated['updated_by'] = $request->user()->id;
@@ -128,5 +130,21 @@ class ReservationController extends Controller
         $reservation = Reservation::with('cashflows')->findOrFail($id);
 
         return CashflowResource::collection($reservation->cashflows);
+    }
+
+    public function showClosest()
+    {
+        // Ambil reservasi dengan tanggal paling dekat dari hari ini
+        $reservation = Reservation::whereDate('wedding_date', '>=', now())
+            ->orderBy('wedding_date', 'asc')
+            ->first();
+
+        if (!$reservation) {
+            return response()->json(['message' => 'Tidak ada reservasi yang akan datang'], 404);
+        }
+
+        $reservation->load(['user', 'vendors', 'updatedBy', 'cashflows', 'activities']);
+
+        return new ReservationResource($reservation);
     }
 }

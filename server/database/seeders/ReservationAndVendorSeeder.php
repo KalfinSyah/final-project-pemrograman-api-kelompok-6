@@ -40,7 +40,8 @@ class ReservationAndVendorSeeder extends Seeder
                 'combined_name' => 'Rano & Julia',
                 'groom' => 'Rano Barno',
                 'bride' => 'Julia Beres',
-                'telephone_num' => '08123433477'
+                'telephone_num' => '08123433477',
+                'wedding_location' => 'Masjid Agung'
             ],
             [
                 'user_id' => 1,
@@ -55,7 +56,8 @@ class ReservationAndVendorSeeder extends Seeder
                 'combined_name' => 'Budi & Kartini',
                 'groom' => 'Budi Pekerti',
                 'bride' => 'Kartini Eka',
-                'telephone_num' => '08123421880'
+                'telephone_num' => '08123421880',
+                'wedding_location' => 'Hotel SInggasan'
             ]
         ];
 

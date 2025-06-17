@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('groom', 255);
             $table->string('bride', 255);
             $table->string('telephone_num', 255);
+            $table->string('wedding_location', 255)->nullable();
             $table->text('wedding_contract_notes');
             $table->text('reception_notes');
             $table->decimal('cashflow_in', 15, 2)->nullable();
