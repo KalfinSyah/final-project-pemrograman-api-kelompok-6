@@ -147,4 +147,14 @@ class ReservationController extends Controller
 
         return new ReservationResource($reservation);
     }
+
+    public function upcoming()
+    {
+        $reservations = Reservation::with(['user', 'vendors', 'updatedBy'])
+            ->where('reservation_status', '!=', 'Batal')
+            ->whereDate('wedding_date', '>', now())
+            ->get();
+
+        return ReservationResource::collection($reservations);
+    }
 }

@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum', 'is_admin'])->group(function () {
 
     Route::apiResource('reservations', ReservationController::class);
     Route::get('/nearestReservation', [ReservationController::class, 'showClosest']);
+    Route::get('/upcoming', [ReservationController::class, 'upcoming']);
 
     Route::apiResource('cashflows', CashflowController::class);
     Route::get('/recentCashflows', [CashflowController::class, 'recentCashflows']);
