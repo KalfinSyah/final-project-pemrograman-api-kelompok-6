@@ -64,17 +64,17 @@ const services = {
   PS: {
     imgPath: new URL('../assets/our-service/service-PS.jpg', import.meta.url).href,
     title: 'Photoshoot',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus iure, laboriosam maiores quo sed voluptate tempora ratione distinctio velit magni rerum officiis sapiente aut omnis eaque libero. Alias, delectus sunt!',
+    desc: 'Abadikan momen spesial Anda dengan sesi pemotretan profesional. Kami menyediakan fotografer berpengalaman yang siap menangkap setiap detail penting dengan hasil yang estetik dan penuh makna. Cocok untuk prewedding, keluarga, hingga produk bisnis.',
   },
   WO: {
     imgPath: new URL('../assets/our-service/service-WO.jpg', import.meta.url).href,
     title: 'Wedding Organizer',
-    desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, ullam ab. Minima cumque esse sunt nisi nulla, repudiandae consequatur veniam, ex tempora saepe optio totam ut maxime eligendi dolor impedit? Beatae possimus alias autem odio ipsam nulla! Minus rem iure fugiat facilis corrupti cumque sunt sint error, tempore quis alias vero deserunt excepturi aliquam quibusdam eos, animi nobis totam dignissimos.',
+    desc: 'Kami hadir untuk memastikan hari pernikahan Anda berjalan lancar dan tak terlupakan. Tim kami akan membantu Anda mulai dari perencanaan konsep, pemilihan vendor, hingga pelaksanaan acara, agar Anda dan pasangan bisa fokus menikmati hari bahagia.',
   },
   EO: {
     imgPath: new URL('../assets/our-service/service-EO.jpg', import.meta.url).href,
     title: 'Event Organizer',
-    desc: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid, ad asperiores! Earum, explicabo numquam quas itaque a ut voluptas modi harum illo similique exercitationem reiciendis! Ipsum ab blanditiis quam est!',
+    desc: 'Percayakan kebutuhan event Anda kepada kami. Baik itu seminar, konser, ulang tahun, atau peluncuran produk, kami siap mengatur segala kebutuhan teknis dan konsep agar acara Anda berjalan sukses dan berkesan.',
   }
 };
 const courusel = [
@@ -177,23 +177,23 @@ const pricelist = [
 const testimonials = [
   {
     imgPath: new URL('../assets/profile/1.jpg', import.meta.url).href,
-    username: 'username1',
-    comment: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+    username: 'Andi',
+    comment: 'Saya benar-benar terkesan dengan pelayanan yang diberikan. Tim sangat profesional dan responsif sejak awal hingga akhir. Semua pertanyaan saya dijawab dengan sabar, dan hasil akhirnya sangat memuaskan. Tidak menyesal memilih layanan ini.',
   },
   {
     imgPath: new URL('../assets/profile/2.jpg', import.meta.url).href,
-    username: 'username2',
-    comment: 'Lorem kasum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+    username: 'Bella',
+    comment: 'Awalnya saya ragu karena ini pertama kalinya saya menggunakan layanan ini, tapi setelah melihat hasilnya, saya benar-benar puas. Prosesnya cepat, komunikatif, dan hasilnya bahkan lebih bagus dari yang saya bayangkan.',
   },
   {
     imgPath: new URL('../assets/profile/3.jpg', import.meta.url).href,
-    username: 'username3',
-    comment: 'Lorem wesum ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!',
+    username: 'Citra',
+    comment: 'Pengalaman saya sangat menyenangkan. Mulai dari pemesanan, konsultasi, hingga hasil akhirnya semuanya berjalan lancar. Mereka benar-benar memperhatikan detail dan kebutuhan saya. Saya pasti akan merekomendasikan ke teman-teman saya.',
   },
   {
     imgPath: new URL('../assets/profile/4.jpg', import.meta.url).href,
-    username: 'username4',
-    comment: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!, Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam culpa id quasi reiciendis delectus aspernatur veritatis atque temporibus maiores? Laboriosam quibusdam inventore ipsa recusandae sed amet doloribus quisquam ut veritatis!",
+    username: 'Dedi',
+    comment: 'Pelayanan yang ramah dan sangat membantu. Saya merasa dilayani dengan sepenuh hati. Terlihat jelas bahwa tim ini sangat berdedikasi pada pekerjaannya. Terima kasih sudah membuat pengalaman saya begitu berkesan!',
   },
 ];
 
@@ -282,8 +282,6 @@ watchEffect(() => {
 <template>
   
 <div id="nav">
-  <!-- <div>Ruang Hati</div> -->
-  <!-- <img src="../assets/logo.png" alt=""> -->
   <img src="../assets/logo.png" alt="">
   <ul>
     <li><a href="#services">services</a></li>
@@ -375,8 +373,8 @@ watchEffect(() => {
         <h3 id="pricelist-popup-details-title">
           {{ priceListPopup.data.title }}
         </h3>
-        <h4>{{ priceListPopup.data.price }}</h4>
-        <p v-html="priceListPopup.data.details.replace(/\n/g, '<br>')"></p>
+        <h4 id="pricelist-popup-details-price" >{{ priceListPopup.data.price }}</h4>
+        <p id="pricelist-popup-details-desc" v-html="priceListPopup.data.details.replace(/\n/g, '<br>')"></p>
    
         <a href="#contact-us" @click="setPriceListPopup(false)">Contact Us</a>
       </div>
@@ -450,7 +448,7 @@ watchEffect(() => {
 #nav ul {
   list-style: none;
   padding: 0;
-  margin: auto;
+  margin: left;
 }
 #nav li {
   display: inline-block; 
@@ -496,6 +494,8 @@ watchEffect(() => {
 #services h2 {
   padding-top: 100px;
   margin-bottom: 25px;
+  font-weight: bold;
+  font-size: 26px;
 }
 
 #service-list {
@@ -559,6 +559,7 @@ watchEffect(() => {
   width: fit-content;
   margin-top: 40px;
   margin-left: 40px;
+  font-weight: bolder;
 }
 #service-desc div {
   margin: 20px 40px 20px 40px;
@@ -571,6 +572,11 @@ watchEffect(() => {
   margin-top: 150px;
   height: 290px;
   text-align: center;
+}
+
+#pricelist > h2 {
+  font-weight: bolder;
+  font-size: 26px;
 }
 
 #pricelist-container {
@@ -623,6 +629,14 @@ watchEffect(() => {
     font-size: 20px;
     font-weight: bold;
 }
+#pricelist-popup-details-title {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+#pricelist-popup-details-price {
+  margin-top: 18px;
+  margin-bottom: 15px;
+}
 #pricelist-popup-details hr {
     height: 2px;
     background-color: black;
@@ -632,7 +646,7 @@ watchEffect(() => {
 
 #pricelist-popup-details > :last-child {
     overflow-y: auto;
-    height: 353px;
+    height: 400px;
     padding: 5px 30px 30px 30px;
     scrollbar-width: thin;         
     scrollbar-color: #999 #f0f0f0;   
@@ -675,11 +689,12 @@ watchEffect(() => {
 } 
 #testimonials div:first-child h2 {
   color: white;
+  font-size: 26px;
+  font-weight: bolder;
 }
 #testimonials div:first-child p {
   color: rgb(195, 195, 195);
   text-align: center;
-  margin-top: -10px;
 }
 #testimonials > div:nth-of-type(2) {
   display: flex;
@@ -687,6 +702,9 @@ watchEffect(() => {
   align-items: center;
   color: rgb(227, 227, 227);
   gap: 100px;
+}
+#testimonials > div:nth-of-type(2) > p {
+  margin-top: 20px;
 }
 #testimonials > div:nth-of-type(2) > p:nth-of-type(1), #testimonials > div:nth-of-type(2) > p:nth-of-type(3) {
   cursor: pointer;
@@ -702,8 +720,9 @@ watchEffect(() => {
   border-radius: 100%;
 }
 #testimonials > div:nth-of-type(3) > p {
-  margin-top: 0;
+  margin-top: 5px;
   color: whitesmoke;
+  font-weight: 500;
 }
 
 #schedule {
@@ -714,6 +733,11 @@ watchEffect(() => {
   width: 950px;
   height: fit-content;
   margin: auto;
+}
+#schedule > h2 {
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: bolder;
 }
 #schedule > div > div {
   border: black 5px solid;

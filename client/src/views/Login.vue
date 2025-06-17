@@ -1,7 +1,9 @@
 
 
 <script setup>
+  import router from '../router';
   import { ref } from 'vue';
+  import Swal from 'sweetalert2'  
 
   const loginForm = ref({
     email: "",
@@ -17,12 +19,26 @@
       });
       const responseData = await response.json();
       if (response.ok) {
-        console.log(responseData)
-        alert("login success")
+        Swal.fire({
+          title: "Seccess",
+          icon: "success",
+          text: "Login success!"
+        });
+        router.push({name: "admin-dashboard"});
+      } else {
+        Swal.fire({
+          title: "Oops...",
+          icon: "error",
+          text: "Wrong credential!"
+        });
       }
     } catch (error) {
       // console.log(error);
-        alert("system error");
+      Swal.fire({
+        title: "Oops...",
+        icon: "error",
+        text: "Something went wrong!"
+      });
     }
   }
 </script>
@@ -30,15 +46,15 @@
 <template>
   <div class="bg-wrapper">
     <div class="form-card">
-      <div class="avatar-icon">👤</div>
-      <h1>Login Member</h1>
+      <div class="avatar-icon">🤵</div>
+      <h1>Login Admin</h1>
       <form @submit.prevent="sendLoginForm">
         <input type="text" v-model="loginForm.email" placeholder="E-Mail" required>
         <input type="password" v-model="loginForm.password" placeholder="Password" required>
         <button type="submit">LOGIN</button>
-        <RouterLink :to="{ name: 'register' }" class="router-link">
+        <!-- <RouterLink :to="{ name: 'register' }" class="router-link">
           Don't have an account yet? Register
-        </RouterLink>
+        </RouterLink> -->
       </form>
     </div>
   </div>
@@ -58,28 +74,35 @@ body, html {
 
 
 .bg-wrapper {
-min-width:100vh;
+  min-width:100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .form-card {
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #f5f5f5;
   padding: 2.5rem 2rem 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px; /* responsif */
+  max-width: 400px;
   text-align: center;
 }
 
+.form-card > h1 {
+  font-weight: bolder;
+  margin-top: 20px;
+}
 
 .avatar-icon {
   width: 70px;
   height: 70px;
-  background-color: #28a745;
+  background-color: #313B66;
   border-radius: 50%;
   color: white;
   font-size: 30px;
@@ -118,7 +141,7 @@ input[type="password"] {
 
 button {
   padding: 10px;
-  background-color: #28a745;
+  background-color: #313b66df;
   color: white;
   font-weight: bold;
   border: none;
@@ -128,17 +151,18 @@ button {
 }
 
 button:hover {
-  background-color: #218838;
+  background-color: #313B66;
 }
 
 .router-link {
   margin-top: 10px;
   font-size: 13px;
-  color: #28a745;
+  color: #a5a5a5;
   text-decoration: none;
 }
 
 .router-link:hover {
+  color: #6d6d6d;
   text-decoration: underline;
 }
 </style>
