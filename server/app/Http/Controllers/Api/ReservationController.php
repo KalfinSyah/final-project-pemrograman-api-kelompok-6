@@ -16,8 +16,22 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservations = Reservation::with(['user', 'vendors', 'updatedBy'])->get();
-        return ReservationResource::collection($reservations);
+        $active_reservations = Reservation::with(['user', 'vendors', 'updatedBy'])
+            ->where('reservation_status', '!=', 'Batal')
+            ->where('wedding_date', '>', now())
+            ->get();
+
+        $inactive_reservations = Reservation::with(['user', 'vendors', 'updatedBy'])
+            ->where(function ($query) {
+                $query->where('reservation_status', 'Batal')
+                    ->orWhere('wedding_date', '<=', now());
+            })
+            ->get();
+
+        return response()->json([
+            'active_reservations' => ReservationResource::collection($active_reservations),
+            'inactive_reservations' => ReservationResource::collection($inactive_reservations),
+        ]);
     }
 
     /**
