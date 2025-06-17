@@ -1,24 +1,22 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
-import router from '../../router';
+import router from '../../router'
 import Swal from 'sweetalert2'
 
-// State form tambah
-const showForm = ref(false)
+const selectedDate = ref(null)
 
-// Data form tambah
 const form = ref({
+  combined_name: "",
+  groom: "",
+  bride: "",
+  wedding_location: "",
+  telephone_num: "",
   wedding_contract_notes: "",
   reception_notes: "",
   wedding_package: "A",
   wedding_date: "",
-  reservation_status : "Berlangsung",
-  combined_name: "",
-  groom: "",
-  bride: "",
-  telephone_num : "",
-  wedding_location : ""
+  reservation_status: "Berlangsung"
 })
 
 // List client aktif & riwayat
@@ -98,13 +96,110 @@ async function fetchRiwayatAcara() {
   }
 }
 
+// Set min date to tomorrow
+const today = new Date()
+const tomorrow = new Date(today)
+tomorrow.setDate(today.getDate() + 2)
+const minDate = tomorrow.toISOString().split('T')[0]
 
+const showTambahAcaraSwal = async () => {
+  const { value: result } = await Swal.fire({
+    title: 'Tambah Acara',
+    customClass: {
+      popup: 'rounded-2xl',
+      title: 'text-[#2F3367] font-bold text-2xl',
+      confirmButton: 'bg-[#2F3367] text-white px-6 py-2 rounded-lg font-semibold mx-2',
+      cancelButton: 'bg-gray-200 text-[#2F3367] px-6 py-2 rounded-lg font-semibold mx-2'
+    },
+    html:
+      `<input id="swal-combined_name" class="swal2-input" placeholder="Nama Gabungan" style="margin-bottom:8px;">
+      <input id="swal-groom" class="swal2-input" placeholder="Nama Pempelai Laki" style="margin-bottom:8px;">
+      <input id="swal-bride" class="swal2-input" placeholder="Nama Pempelai Wanita" style="margin-bottom:8px;">
+      <input id="swal-wedding_location" class="swal2-input" placeholder="Lokasi Pernikahan" style="margin-bottom:8px;">
+      <input id="swal-telephone_num" class="swal2-input" placeholder="No. Telp" style="margin-bottom:8px;">
+      <input id="swal-wedding_contract_notes" class="swal2-input" placeholder="Wedding Contract Notes" style="margin-bottom:8px;">
+      <input id="swal-reception_notes" class="swal2-input" placeholder="Reception Notes" style="margin-bottom:8px;">
+      <select id="swal-wedding_package" class="swal2-input" style="margin-bottom:8px; color:#2F3367; font-weight:bold; background:#e8eaf6;">
+        <option value="A">Paket A</option>
+        <option value="B">Paket B</option>
+        <option value="C">Paket C</option>
+      </select>
+      <input id="swal-wedding_date" type="date" class="swal2-input" placeholder="Tanggal" style="background:#e8eaf6; margin-bottom:8px;" min="${minDate}">
+      <select id="swal-reservation_status" class="swal2-input" style="margin-bottom:8px; color:#2F3367; font-weight:bold; background:#e8eaf6;">
+        <option value="Berlangsung">Berlangsung</option>
+        <option value="Selesai">Selesai</option>
+      </select>`,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: 'Simpan',
+    cancelButtonText: 'Batal',
+    buttonsStyling: false,
+    preConfirm: () => {
+      return {
+        combined_name: document.getElementById('swal-combined_name').value,
+        groom: document.getElementById('swal-groom').value,
+        bride: document.getElementById('swal-bride').value,
+        wedding_location: document.getElementById('swal-wedding_location').value,
+        telephone_num: document.getElementById('swal-telephone_num').value,
+        wedding_contract_notes: document.getElementById('swal-wedding_contract_notes').value,
+        reception_notes: document.getElementById('swal-reception_notes').value,
+        wedding_package: document.getElementById('swal-wedding_package').value,
+        wedding_date: document.getElementById('swal-wedding_date').value,
+        reservation_status: document.getElementById('swal-reservation_status').value
+      }
+    }
+  })
 
+  if (result) {
+    // Validate required fields
+    if (!result.combined_name || !result.groom || !result.bride || !result.wedding_location || !result.telephone_num || !result.wedding_date) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: 'Semua field wajib diisi!',
+        confirmButtonColor: '#2F3367'
+      })
+      return
+    }
+    // Submit to API
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(result)
+      })
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Acara berhasil ditambahkan!',
+          confirmButtonColor: '#2F3367'
+        }).then(() => window.location.reload())
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Gagal tambah acara!',
+          confirmButtonColor: '#2F3367'
+        })
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: 'Gagal tambah acara! (system)',
+        confirmButtonColor: '#2F3367'
+      })
+    }
+  }
+}
 
 onMounted(() => {
   fetchAcaraSaatIni();
   fetchRiwayatAcara();
 });
+
 </script>
 
 <template>
@@ -115,7 +210,7 @@ onMounted(() => {
 
       <!-- Tombol tambah -->
       <div class="flex justify-end mb-4">
-        <button @click="showForm = true"
+        <button @click="showTambahAcaraSwal"
           class="bg-white rounded-xl shadow px-6 py-2 font-semibold border hover:bg-gray-100 text-black">
           Tambah Acara
         </button>
@@ -238,7 +333,7 @@ onMounted(() => {
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">Tanggal</label>
-            <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required />
+            <input v-model="form.wedding_date" type="date" class="w-full border rounded px-3 py-2" required :min="minDate" />
           </div>
           <div class="mb-4">
             <label class="block text-gray-700">Status</label>
