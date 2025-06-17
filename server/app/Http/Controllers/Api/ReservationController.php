@@ -18,7 +18,7 @@ class ReservationController extends Controller
     {
         $active_reservations = Reservation::with(['user', 'vendors', 'updatedBy'])
             ->where('reservation_status', '!=', 'Batal')
-            ->where('wedding_date', '>', now())
+            ->where('wedding_date', '>=', now())
             ->get();
 
         $inactive_reservations = Reservation::with(['user', 'vendors', 'updatedBy'])
