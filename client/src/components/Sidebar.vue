@@ -2,6 +2,10 @@
 import logo from '../assets/logo.png'
 import { useRoute } from 'vue-router'
 const route = useRoute()
+
+function handleLogout() {
+  localStorage.removeItem('token')
+}
 </script>
 
 <template>
@@ -50,6 +54,7 @@ const route = useRoute()
       <router-link
         to="/"
         class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
+        @click="handleLogout"
       >
         <span class="mr-2">🚪</span> Keluar
       </router-link>

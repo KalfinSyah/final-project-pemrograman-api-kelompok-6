@@ -1,5 +1,3 @@
-
-
 <script setup>
   import router from '../router';
   import { ref } from 'vue';
@@ -19,12 +17,17 @@
       });
       const responseData = await response.json();
       if (response.ok) {
+        localStorage.setItem('token', responseData.token); // Save token
         Swal.fire({
-          title: "Seccess",
+          title: "Success",
           icon: "success",
           text: "Login success!"
         });
         router.push({name: "admin-dashboard"});
+      } else if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+        return;
       } else {
         Swal.fire({
           title: "Oops...",
