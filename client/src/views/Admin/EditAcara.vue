@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import {useRoute} from "vue-router";
+  import Swal from 'sweetalert2'
   const route = useRoute();
-  console.log(route.params.idAcara)
 
   // Reactive form state
   const form = ref({
@@ -18,11 +18,66 @@ import { ref } from 'vue'
     wedding_location: ""
   })
 
-  const submitForm = () => {
-    console.log("Form submitted:", form.value)
-    // TODO: handle API call here
+  const submitForm = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+        body: JSON.stringify(form.value)
+      });
+      if (response.ok) {
+        Swal.fire({
+          title: "Success",
+          icon: "success",
+          text: "Berhasil edit acara!"
+        });
+      } else {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal edit acara!"
+        });
+      }
+    } catch (error) {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal edit acara! (system error)"
+        });
+    }
   }
 
+async function fetchAcara() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/reservations/${route.params.idAcara}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+        Swal.fire({
+          title: "Failed",
+          icon: "error",
+          text: "Gagal fetch acara!"
+        });
+    } else {
+      const data = await response.json();
+      form.value = data.data
+    }
+  } catch (err) {
+    Swal.fire({
+      title: "Failed",
+      icon: "error",
+      text: "Gagal fetch acara! (system)"
+    });
+  }
+}
+
+onMounted(() => {
+  fetchAcara();
+});
 </script>
 
 <template>
@@ -32,7 +87,7 @@ import { ref } from 'vue'
 
       <div>
         <label class="block text-gray-700">Nama Gabungan</label>
-        <input v-model="form.wedding_contract_notes" type="text" class="w-full border rounded px-3 py-2" required />
+        <input v-model="form.combined_name" type="text" class="w-full border rounded px-3 py-2" required />
       </div>
 
       <div>

@@ -1,23 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
-import DashboardHeader from '../../components/DashboardHeader.vue'
 import router from '../../router';
 import Swal from 'sweetalert2'
 
 // State form tambah
 const showForm = ref(false)
-
-// State form edit
-const isEditing = ref(false)
-const editingClient = ref({
-  id: null,
-  name: '',
-  phone: '',
-  paket: 'A',
-  tanggal: '',
-  status: 'Berlangsung'
-})
 
 // Data form tambah
 const form = ref({
@@ -71,20 +59,6 @@ const addClient = async () => {
   window.location.reload()
 }
 
-// Fungsi mulai edit
-const startEdit = (client) => {
-  editingClient.value = { ...client }
-  isEditing.value = true
-}
-
-// Fungsi update client
-const updateClient = () => {
-  const index = currentClients.value.findIndex(c => c.id === editingClient.value.id)
-  if (index !== -1) {
-    currentClients.value[index] = { ...editingClient.value }
-  }
-  isEditing.value = false
-}
 
 async function fetchAcaraSaatIni() {
   try {
