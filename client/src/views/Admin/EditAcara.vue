@@ -312,6 +312,17 @@ onMounted(() => {
 
 <template>
   <div class="max-w-4xl mx-auto p-6 space-y-8">
+    <!-- Back Button -->
+    <button
+      @click="$router.push('/acara')"
+      class="mb-6 flex items-center gap-2 px-4 py-2 rounded bg-[#2F3367] text-white font-semibold hover:bg-[#23265a] transition"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      Kembali
+    </button>
+
     <!-- Reservation Form -->
     <div class="bg-white rounded-lg shadow p-6">
       <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Form Reservasi Pernikahan</h2>
