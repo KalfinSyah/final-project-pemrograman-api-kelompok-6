@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
 import DashboardHeader from '../../components/DashboardHeader.vue'
 import ProgressCircle from '../../components/ProgresCircle.vue'
@@ -11,13 +11,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import Swal from 'sweetalert2'
 
-const checklistItems = ref([
-  'Reservasi lokasi',
-  'Pemesan Katering',
-  'Koordinasi Staff',
-  'Pelaksanaan Acara'
-])
-
 const reservation = ref(null)
 const eventName = ref('Belum tersedia')
 const eventDate = ref('Belum tersedia')
@@ -27,6 +20,18 @@ const cashIn = ref(0)
 const cashOut = ref(0)
 const eventLocation = ref('Belum tersedia')
 const reservationStatus = ref('Belum tersedia')
+
+// Activities for checklist and progress
+const allActivities = ref([])
+const completedActivities = computed(() =>
+  allActivities.value.filter(a => a.activity_status === 'Selesai')
+)
+const checklistItems = computed(() => allActivities.value.map(a => a.activity_name))
+const progressValue = computed(() =>
+  allActivities.value.length > 0
+    ? Math.round((completedActivities.value.length / allActivities.value.length) * 100)
+    : 0
+)
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, interactionPlugin],
@@ -78,9 +83,12 @@ async function fetchDashboardData() {
     eventName.value = data.data?.combined_name || 'Belum tersedia';
     eventDate.value = data.data?.wedding_date || 'Belum tersedia';
 
-    if (data.data?.activities && data.data.activities.length > 0) {
-      // Show the nearest activity that is not "Selesai"
-      const nextActivity = data.data.activities.find(a => a.activity_status !== 'Selesai');
+    // Fill activities for checklist and progress
+    allActivities.value = data.data?.activities || [];
+
+    // Show the nearest activity that is not "Selesai"
+    if (allActivities.value.length > 0) {
+      const nextActivity = allActivities.value.find(a => a.activity_status !== 'Selesai');
       currentTask.value = nextActivity?.activity_name || 'Belum tersedia';
       taskDate.value = nextActivity?.activity_date || 'Belum tersedia';
     } else {
@@ -91,8 +99,8 @@ async function fetchDashboardData() {
     cashIn.value = Number(data.data?.cashflow_in) || 0;
     cashOut.value = Number(data.data?.cashflow_out) || 0;
 
-    if (data.data?.activities && data.data.activities.length > 0) {
-      calendarOptions.value.events = data.data.activities.map(item => ({
+    if (allActivities.value.length > 0) {
+      calendarOptions.value.events = allActivities.value.map(item => ({
         title: item.activity_name || item.activity_type,
         date: item.activity_date,
         description: item.activity_desc,
@@ -103,7 +111,7 @@ async function fetchDashboardData() {
     }
 
     eventLocation.value = data.data?.wedding_location || 'Belum tersedia'
-    reservationStatus.value = data.data?.reservation_status || 'Belum tersedia' // <-- Add this line
+    reservationStatus.value = data.data?.reservation_status || 'Belum tersedia'
   } catch (err) {
     eventName.value = 'Belum tersedia'
     eventDate.value = 'Belum tersedia'
@@ -114,6 +122,7 @@ async function fetchDashboardData() {
     calendarOptions.value.events = []
     eventLocation.value = 'Belum tersedia'
     reservationStatus.value = 'Belum tersedia'
+    allActivities.value = []
     console.error('Failed to fetch dashboard data:', err)
   }
 }
@@ -129,7 +138,7 @@ onMounted(() => {
     <div class="ml-64 p-8">
       <DashboardHeader />
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 items-stretch">
-        <ProgressCircle :value="75" />
+        <ProgressCircle :value="progressValue" />
         <EventCard
           :currentEvent="eventName"
           :date="eventDate"
@@ -141,7 +150,7 @@ onMounted(() => {
         <CashflowCard :masuk="cashIn" :keluar="cashOut" />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        <ChecklistCard :items="checklistItems" />
+        <ChecklistCard :items="checklistItems" :completed-count="completedActivities.length" />
         <CalendarCard :options="calendarOptions" />
       </div>
     </div>
