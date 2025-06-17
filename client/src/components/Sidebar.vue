@@ -1,12 +1,7 @@
 <script setup>
 import logo from '../assets/logo.png'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
-
-function handleKeluar() {
-  router.push('/')
-}
 </script>
 
 <template>
@@ -34,7 +29,7 @@ function handleKeluar() {
         class="flex items-center px-4 py-2 rounded transition"
         :class="route.path === '/klien' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
-        <span class="mr-2">👤</span> Klien
+        <span class="mr-2">🧰</span> Vendor
       </router-link>
       <router-link
         to="/laporan"
@@ -47,7 +42,8 @@ function handleKeluar() {
     <div class="mt-auto mb-4 flex flex-col space-y-2">
       <router-link
         to="/pengaturan"
-        class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
+        class="flex items-center px-4 py-2 rounded transition"
+        :class="route.path === '/pengaturan' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
         <span class="mr-2">⚙️</span> Pengaturan
       </router-link>

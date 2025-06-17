@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
 
+const isEditing = ref(false)
+const editingClient = ref(null)
+
 // Data Klien
 const currentClients = ref([
   {
@@ -13,7 +16,6 @@ const currentClients = ref([
     status: 'Berlangsung'
   }
 ])
-
 const clientHistory = ref([])
 
 // Form & Modal
@@ -36,6 +38,26 @@ const addClient = () => {
   resetForm()
 }
 
+// Fungsi Edit Klien
+const editClient = (client) => {
+  form.value = { ...client }
+  editingClient.value = client
+  isEditing.value = true
+  showForm.value = true
+}
+
+// Fungsi Update Klien
+const updateClient = () => {
+  const index = currentClients.value.findIndex(c => c.id === editingClient.value.id)
+  if (index !== -1) {
+    currentClients.value[index] = { ...form.value }
+  }
+  resetForm()
+  isEditing.value = false
+  editingClient.value = null
+}
+
+// Reset Form
 const resetForm = () => {
   form.value = {
     name: '',
@@ -45,6 +67,8 @@ const resetForm = () => {
     status: 'Berlangsung'
   }
   showForm.value = false
+  isEditing.value = false
+  editingClient.value = null
 }
 </script>
 
@@ -55,7 +79,7 @@ const resetForm = () => {
       <h1 class="text-5xl font-bold text-[#2F3367] mb-8">Klien</h1>
       <div class="flex justify-end mb-4">
         <button
-          @click="showForm = true"
+          @click="() => { resetForm(); showForm = true }"
           class="bg-white rounded-xl shadow px-6 py-2 font-semibold border hover:bg-gray-100 text-black">
           Tambah Klien
         </button>
@@ -73,7 +97,8 @@ const resetForm = () => {
                 <th class="px-4 py-2">Nama CPP</th>
                 <th class="px-4 py-2">Nama CPW</th>
                 <th class="px-4 py-2">No. Telp</th>
-                <th class="px-4 py-2 rounded-r-lg">Status</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2 rounded-r-lg">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -84,6 +109,11 @@ const resetForm = () => {
                 <td class="px-4 py-2">{{ client.nama_cpw }}</td>
                 <td class="px-4 py-2">{{ client.phone }}</td>
                 <td class="px-4 py-2">{{ client.status }}</td>
+                <td class="px-4 py-2">
+                  <button @click="editClient(client)" class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
+                    Edit
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -123,69 +153,53 @@ const resetForm = () => {
       </div>
     </div>
 
-    <!-- Modal Tambah Klien -->
-   <transition name="fade">
-  <div v-if="showForm" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white p-8 rounded-xl w-full max-w-3xl shadow-xl relative transition-all transform scale-100">
-      <h2 class="text-2xl font-bold text-[#2F3367] mb-6">Tambah Klien</h2>
-      <form @submit.prevent="addClient" class="space-y-4">
-        <div>
-          <label class="block text-gray-700 mb-1">Nama Gabungan</label>
-          <input v-model="form.name" type="text" class="w-full border rounded px-3 py-2" required />
+    <!-- Modal Tambah/Edit Klien -->
+    <transition name="fade">
+      <div v-if="showForm" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-xl w-full max-w-3xl shadow-xl relative transition-all transform scale-100">
+          <h2 class="text-2xl font-bold text-[#2F3367] mb-6">{{ isEditing ? 'Edit Klien' : 'Tambah Klien' }}</h2>
+          <form @submit.prevent="isEditing ? updateClient() : addClient()" class="space-y-4">
+            <div>
+              <label class="block text-gray-700 mb-1">Nama Gabungan</label>
+              <input v-model="form.name" type="text" class="w-full border rounded px-3 py-2" required />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Nama CPP</label>
+              <input v-model="form.nama_cpp" type="text" class="w-full border rounded px-3 py-2" />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Nama CPW</label>
+              <input v-model="form.nama_cpw" type="text" class="w-full border rounded px-3 py-2" />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">No. Telp</label>
+              <input v-model="form.phone" type="text" class="w-full border rounded px-3 py-2" required />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1">Status</label>
+              <select v-model="form.status" class="w-full border rounded px-3 py-2">
+                <option value="Berlangsung">Berlangsung</option>
+                <option value="Selesai">Selesai</option>
+              </select>
+            </div>
+            <div class="flex justify-end gap-3 pt-4">
+              <button type="button" @click="resetForm" class="px-4 py-2 rounded border">Batal</button>
+              <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+                {{ isEditing ? 'Update' : 'Simpan' }}
+              </button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label class="block text-gray-700 mb-1">Nama CPP</label>
-          <input v-model="form.nama_cpp" type="text" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label class="block text-gray-700 mb-1">Nama CPW</label>
-          <input v-model="form.nama_cpw" type="text" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label class="block text-gray-700 mb-1">No. Telp</label>
-          <input v-model="form.phone" type="text" class="w-full border rounded px-3 py-2" required />
-        </div>
-        <div>
-          <label class="block text-gray-700 mb-1">Status</label>
-          <select v-model="form.status" class="w-full border rounded px-3 py-2">
-            <option value="Berlangsung">Berlangsung</option>
-            <option value="Selesai">Selesai</option>
-          </select>
-        </div>
-        <div class="flex justify-end gap-3 pt-4">
-          <button type="button" @click="showForm = false" class="px-4 py-2 rounded border">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Simpan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</transition>
-
+      </div>
+    </transition>
   </div>
 </template>
 
 <style scoped>
-/* Transisi Modal Fade */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s ease;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
-}
-
-/* Transisi Skala untuk konten modal */
-@keyframes scale-in {
-  0% {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.animate-scale-in {
-  animation: scale-in 0.3s ease;
 }
 </style>
