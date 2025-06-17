@@ -171,9 +171,11 @@ onMounted(() => {
       <div class="bg-white rounded-2xl shadow-lg p-8 mt-8">
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-[#2F3367]">Riwayat Transaksi</h2>
-          <button class="bg-white rounded-xl shadow px-6 py-2 font-semibold border hover:bg-[#e8eaf6] text-[#2F3367]">
+            <!--
+            <button class="bg-white rounded-xl shadow px-6 py-2 font-semibold border hover:bg-[#e8eaf6] text-[#2F3367]">
             Tambah Transaksi
-          </button>
+            </button>
+            -->
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full text-left border-separate border-spacing-y-2">
