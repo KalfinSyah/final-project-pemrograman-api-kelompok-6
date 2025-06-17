@@ -64,17 +64,17 @@ const services = {
   PS: {
     imgPath: new URL('../assets/our-service/service-PS.jpg', import.meta.url).href,
     title: 'Photoshoot',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus iure, laboriosam maiores quo sed voluptate tempora ratione distinctio velit magni rerum officiis sapiente aut omnis eaque libero. Alias, delectus sunt!',
+    desc: 'Abadikan momen spesial Anda dengan sesi pemotretan profesional. Kami menyediakan fotografer berpengalaman yang siap menangkap setiap detail penting dengan hasil yang estetik dan penuh makna. Cocok untuk prewedding, keluarga, hingga produk bisnis.',
   },
   WO: {
     imgPath: new URL('../assets/our-service/service-WO.jpg', import.meta.url).href,
     title: 'Wedding Organizer',
-    desc: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus, ullam ab. Minima cumque esse sunt nisi nulla, repudiandae consequatur veniam, ex tempora saepe optio totam ut maxime eligendi dolor impedit? Beatae possimus alias autem odio ipsam nulla! Minus rem iure fugiat facilis corrupti cumque sunt sint error, tempore quis alias vero deserunt excepturi aliquam quibusdam eos, animi nobis totam dignissimos.',
+    desc: 'Kami hadir untuk memastikan hari pernikahan Anda berjalan lancar dan tak terlupakan. Tim kami akan membantu Anda mulai dari perencanaan konsep, pemilihan vendor, hingga pelaksanaan acara, agar Anda dan pasangan bisa fokus menikmati hari bahagia.',
   },
   EO: {
     imgPath: new URL('../assets/our-service/service-EO.jpg', import.meta.url).href,
     title: 'Event Organizer',
-    desc: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid, ad asperiores! Earum, explicabo numquam quas itaque a ut voluptas modi harum illo similique exercitationem reiciendis! Ipsum ab blanditiis quam est!',
+    desc: 'Percayakan kebutuhan event Anda kepada kami. Baik itu seminar, konser, ulang tahun, atau peluncuran produk, kami siap mengatur segala kebutuhan teknis dan konsep agar acara Anda berjalan sukses dan berkesan.',
   }
 };
 const courusel = [
