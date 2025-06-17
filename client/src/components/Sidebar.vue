@@ -1,7 +1,12 @@
 <script setup>
 import logo from '../assets/logo.png'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
+const router = useRouter()
+
+function handleKeluar() {
+  router.push('/')
+}
 </script>
 
 <template>
@@ -13,7 +18,7 @@ const route = useRoute()
       <router-link
         to="/dashboard"
         class="flex items-center px-4 py-2 rounded transition"
-        :class="route.path === '/admin/dashboard' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
+        :class="route.path === '/dashboard' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
         <span class="mr-2">🏠</span> Dashboard
       </router-link>
@@ -47,7 +52,7 @@ const route = useRoute()
         <span class="mr-2">⚙️</span> Pengaturan
       </router-link>
       <router-link
-        to="/keluar"
+        to="/"
         class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
       >
         <span class="mr-2">🚪</span> Keluar

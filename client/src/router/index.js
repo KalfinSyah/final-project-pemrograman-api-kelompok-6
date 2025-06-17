@@ -6,6 +6,7 @@ import Dashboard from '../views/Admin/Dashboard.vue'
 import Acara from '../views/Admin/Acara.vue'
 import Klien from '../views/Admin/Klien.vue'
 import Laporan from '../views/Admin/Laporan.vue'
+import Pengaturan from '../views/Admin/Pengaturan.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -29,6 +30,7 @@ const router = createRouter({
     { path: '/acara', name: 'acara', component: Acara },
     { path: '/klien', name: 'klien', component: Klien },
     { path: '/laporan', name: 'laporan', component: Laporan },
+    { path: '/pengaturan', name: 'pengaturan', component: Pengaturan },
   ],
 })
 
