@@ -29,13 +29,6 @@ const route = useRoute()
         class="flex items-center px-4 py-2 rounded transition"
         :class="route.path === '/klien' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
-        <span class="mr-2">👤</span> Klien
-      </router-link>
-      <router-link
-        to="/vendor"
-        class="flex items-center px-4 py-2 rounded transition"
-        :class="route.path === '/vendor' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
-      >
         <span class="mr-2">🧰</span> Vendor
       </router-link>
       <router-link
