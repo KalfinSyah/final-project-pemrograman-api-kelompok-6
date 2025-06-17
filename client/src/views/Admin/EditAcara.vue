@@ -19,7 +19,16 @@
   })
 
   const dataCashFlow = ref([])
-  const formAddCashFlow = ref({})
+  const formAddCashFlow = ref({
+    isShowing: false,
+    data: {
+      cashflow_type: "Pendapatan",
+      amount: 0,
+      cashflow_date : "",
+      cashflow_desc : "",
+      reservation_id : route.params.idAcara
+    }
+  })
 
   const tambahKegiatanForm = ref({
     isShowing: false,
@@ -33,6 +42,8 @@
     }
   });
 
+ 
+
   const editModalVisible = ref(false);
   const editActivityForm = ref({
   reservation_id: null,
@@ -41,6 +52,15 @@
   activity_date: '',
   activity_desc: '',
   activity_status: ''
+}); 
+
+ const editCashFlowFormVisibility = ref(false)
+  const editCashFlowForm = ref({
+  cashflow_type: "Pendapatan",
+  amount: 0,
+  cashflow_date : "2025-06-12",
+  cashflow_desc : "Client Tidak Jadi Uang tambahan",
+  reservation_id : null
 }); 
 
 
@@ -102,6 +122,14 @@
     }
   }
 
+  function editCashflow(id) { 
+    const target = form.value.cashflows.find(a => a.cashflow_id === id);
+    if (target) {
+      editCashFlowForm.value = { ...target };
+      editCashFlowFormVisibility.value = true;
+    }
+   }
+
 function closeEditModal() {
   editModalVisible.value = false;
   tambahKegiatanForm.value.isShowing = false;
@@ -109,6 +137,10 @@ function closeEditModal() {
 
 function popupTambahKegiatan(isShowing) {
   tambahKegiatanForm.value.isShowing = isShowing
+}
+
+function popupTambahCashFlow(isShowing) {
+  formAddCashFlow.value.isShowing = isShowing
 }
 
 async function fetchAcara() {
@@ -190,10 +222,36 @@ async function addActivity() {
           }
 }
 
+async function addCashFlow() {
+          try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows`, {
+              method: "POST",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+              body: JSON.stringify(formAddCashFlow.value.data)
+            });
+            if (response.ok) {
+              window.location.reload()
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal tambah cashflow!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal tambah cashflow! (system error)"
+              });
+          }
+}
+
 async function fetchDataCashflow() {
             try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows/${route.params.idAcara}`, {
               method: "GET",
               headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
             });
@@ -212,6 +270,32 @@ async function fetchDataCashflow() {
                 title: "Failed",
                 icon: "error",
                 text: "Gagal fetch cashflow! (system error)"
+              });
+          }
+}
+
+async function updateCashFlow(id) {
+              try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows/${id}`, {
+              method: "PUT",
+              headers: {"Content-Type": "application/json", 'Authorization': `Bearer ${token}`},
+              body: JSON.stringify(editCashFlowForm.value)
+            });
+            if (response.ok) {
+              window.location.reload()
+            } else {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit cashflow!"
+              });
+            }
+          } catch (error) {
+              Swal.fire({
+                title: "Failed",
+                icon: "error",
+                text: "Gagal edit cash flow! (system error)"
               });
           }
 }
@@ -296,25 +380,25 @@ onMounted(() => {
     </div>
 
     <div class="bg-white rounded-lg shadow p-6">
-    <div @click="popupTambahKegiatan(true)" class="col-span-1 md:col-span-2 text-right mt-2">
+    <div @click="popupTambahCashFlow(true)" class="col-span-1 md:col-span-2 text-right mt-2">
       <button class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
         Tambah Cashflow
       </button>
     </div>
     <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Cashflow</h2>
 
-    <div v-if="dataCashFlow && dataCashFlow.length > 0" class="space-y-4">
+    <div v-if="form.cashflows && form.cashflows.length > 0" class="space-y-4">
       <div
-        v-for="cashData in dataCashFlow"
+        v-for="cashData in form.cashflows"
         class="relative border-l-4 pl-4 border-blue-500 bg-gray-50 p-4 rounded"
       >
         <!-- Edit Button -->
-        <!-- <button
-          @click="editKegiatan(activity.activity_id)"
+        <button
+          @click="editCashflow(cashData.cashflow_id)"
           class="absolute top-3 right-3 text-sm text-blue-600 hover:underline hover:text-blue-800"
         >
           Edit
-        </button> -->
+        </button>
 
         <p class="text-gray-700 mt-2">
           Tipe : {{ cashData.cashflow_type }}
@@ -483,49 +567,68 @@ onMounted(() => {
 </div>
 
 
-<div v-if="tambahKegiatanForm.isShowing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+<div v-if="formAddCashFlow.isShowing" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
-    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Tambah Kegiatan</h2>
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Tambah Cashflow</h2>
 
     <div class="space-y-4">
       <div>
-        <label class="block text-gray-700">Nama Kegiatan</label>
-        <input v-model="tambahKegiatanForm.data.activity_name" type="text" class="w-full border rounded px-3 py-2" />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Jenis Kegiatan</label>
-        <select v-model="tambahKegiatanForm.data.activity_type" class="w-full border rounded px-3 py-2">
-          <option value="Reservasi Lokasi">Reservasi Lokasi</option>
-          <option value="Pemesanan Katering">Pemesanan Katering</option>
-          <option value="Koordinasi Staff">Koordinasi Staff</option>
-          <option value="Pelaksanaan Acara">Pelaksanaan Acara</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Tanggal</label>
-        <input v-model="tambahKegiatanForm.data.activity_date" type="date" class="w-full border rounded px-3 py-2" />
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Deskripsi</label>
-        <textarea v-model="tambahKegiatanForm.data.activity_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
-      </div>
-
-      <div>
-        <label class="block text-gray-700">Status</label>
-        <select v-model="tambahKegiatanForm.data.activity_status" class="w-full border rounded px-3 py-2">
-          <option value="Pending">Pending</option>
-          <option value="Selesai">Selesai</option>
-          <option value="Batal">Batal</option>
-        </select>
+          <label class="block text-gray-700">Tipe</label>
+          <select v-model="formAddCashFlow.data.cashflow_type" class="w-full border rounded px-3 py-2">
+            <option value="Pendapatan">Pendapatan</option>
+            <option value="Pengeluaran">Pengeluaran</option>
+          </select>
+        <div>
+          <label class="block text-gray-700">Jumlah</label>
+          <textarea v-model="formAddCashFlow.data.amount" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-gray-700">Tanggal</label>
+          <input v-model="formAddCashFlow.data.cashflow_date" type="date" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-gray-700">Deskripsi</label>
+          <textarea v-model="formAddCashFlow.data.cashflow_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
       </div>
     </div>
 
     <div class="mt-6 flex justify-end space-x-2">
-      <button @click="closeEditModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
-      <button @click="addActivity" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tambah</button>
+      <button @click="formAddCashFlow.isShowing = false" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+      <button @click="addCashFlow" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tambah</button>
+    </div>
+  </div>
+</div>
+
+<div v-if="editCashFlowFormVisibility" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-xl">
+    <h2 class="text-xl font-semibold text-[#2F3367] mb-4">Edit Cash Flow</h2>
+
+    <div class="space-y-4">
+      <div>
+          <label class="block text-gray-700">Tipe</label>
+          <select v-model="editCashFlowForm.cashflow_type" class="w-full border rounded px-3 py-2">
+            <option value="Pendapatan">Pendapatan</option>
+            <option value="Pengeluaran">Pengeluaran</option>
+          </select>
+        <div>
+          <label class="block text-gray-700">Jumlah</label>
+          <textarea v-model="editCashFlowForm.amount" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-gray-700">Tanggal</label>
+          <input v-model="editCashFlowForm.cashflow_date" type="date" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-gray-700">Deskripsi</label>
+          <textarea v-model="editCashFlowForm.cashflow_desc" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-end space-x-2">
+      <button @click="editCashFlowFormVisibility = false" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Batal</button>
+      <button @click="updateCashFlow(editCashFlowForm.cashflow_id)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
     </div>
   </div>
 </div>
