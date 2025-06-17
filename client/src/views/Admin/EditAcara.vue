@@ -84,7 +84,7 @@
                   wedding_contract_notes: form.value.wedding_contract_notes,
                   reception_notes: form.value.reception_notes,
                   wedding_package: form.value.wedding_package,
-                  wedding_date : form.value.wedding_package,
+                  wedding_date : form.value.wedding_date,
                   reservation_status : form.value.reservation_status,
                   combined_name : form.value.combined_name,
                   groom : form.value.groom,
