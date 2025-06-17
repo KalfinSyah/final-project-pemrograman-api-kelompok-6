@@ -27,12 +27,17 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'marriage_contract_notes' => 'required|string',
+            'wedding_contract_notes' => 'required|string',
             'reception_notes' => 'required|string',
             'wedding_package' => [
                 'required',
                 Rule::in(Reservation::PACKAGES),
             ],
+            'reservation_status' => [
+                'required',
+                Rule::in(Reservation::STATUSES),
+            ],
+            'wedding_date' => 'required|date',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);
@@ -65,13 +70,19 @@ class ReservationController extends Controller
     public function update(Request $request, Reservation $reservation)
     {
         $validated = $request->validate([
-            'marriage_contract_notes' => 'sometimes|required|string',
+            'wedding_contract_notes' => 'sometimes|required|string',
             'reception_notes' => 'sometimes|required|string',
             'wedding_package' => [
                 'sometimes',
                 'required',
                 Rule::in(Reservation::PACKAGES),
             ],
+            'reservation_status' => [
+                'sometimes',
+                'required',
+                Rule::in(Reservation::STATUSES),
+            ],
+            'wedding_date' => 'sometimes|required|date',
             'vendor_ids' => 'nullable|array',
             'vendor_ids.*' => 'exists:vendors,id',
         ]);

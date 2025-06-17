@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('restrict');
             $table->foreignId('user_id')->constrained()->onDelete('restrict');
-            $table->text('marriage_contract_notes');
+            $table->text('wedding_contract_notes');
             $table->text('reception_notes');
             $table->decimal('cashflow_in', 15, 2)->nullable();
             $table->decimal('cashflow_out', 15, 2)->nullable();

@@ -13,11 +13,13 @@ class Reservation extends Model
         'client_id',
         'user_id',
         'updated_by',
-        'marriage_contract_notes',
+        'wedding_contract_notes',
         'reception_notes',
         'cashflow_in',
         'cashflow_out',
-        'wedding_package'
+        'wedding_package',
+        'wedding_date',
+        'reservation_status'
     ];
 
     public const PACKAGES = [
@@ -26,6 +28,13 @@ class Reservation extends Model
         'C',
         'D',
         'E',
+    ];
+
+    public const STATUSES = [
+        'Pending',
+        'Berlangsung',
+        'Selesai',
+        'Batal',
     ];
 
     public function client()
