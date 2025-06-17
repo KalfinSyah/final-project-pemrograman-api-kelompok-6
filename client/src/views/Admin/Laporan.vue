@@ -7,7 +7,6 @@ const transactionHistory = ref([])
 // --- Graph Data ---
 const graphRaw = ref({})
 const graphData = computed(() => {
-  // Flatten and keep month info
   const arr = []
   Object.entries(graphRaw.value).forEach(([bulan, items]) => {
     items.forEach(item => {
@@ -21,11 +20,9 @@ const graphData = computed(() => {
       })
     })
   })
-  // Sort by date ascending
   return arr.sort((a, b) => new Date(a.label) - new Date(b.label))
 })
 const monthGroups = computed(() => {
-  // [{ bulan: 'Juni', count: 4 }, ...]
   const result = []
   Object.entries(graphRaw.value).forEach(([bulan, items]) => {
     result.push({ bulan, count: items.length })
@@ -37,7 +34,6 @@ const maxNominal = computed(() => {
   return Math.max(...graphData.value.map(item => Math.abs(item.value)))
 })
 
-// --- Cashflow Summary ---
 const cashIn = computed(() =>
   transactionHistory.value.filter(t => t.jumlah > 0).reduce((sum, t) => sum + t.jumlah, 0)
 )
@@ -45,7 +41,6 @@ const cashOut = computed(() =>
   transactionHistory.value.filter(t => t.jumlah < 0).reduce((sum, t) => sum + Math.abs(t.jumlah), 0)
 )
 
-// --- Fetch Graph Data ---
 async function fetchGraphData() {
   try {
     const token = localStorage.getItem('token')
@@ -63,7 +58,6 @@ async function fetchGraphData() {
   }
 }
 
-// --- Fetch Transaction History ---
 async function fetchTransactions() {
   try {
     const token = localStorage.getItem('token')
@@ -86,6 +80,13 @@ async function fetchTransactions() {
     transactionHistory.value = []
     console.error('Failed to fetch transactions:', err)
   }
+}
+
+// Separate bar height logic for clarity
+function getBarHeight(value) {
+  if (!maxNominal.value || maxNominal.value === 0) return '8px'
+  // 90px is the max bar height for better label spacing
+  return Math.min((Math.abs(value) / maxNominal.value) * 90, 90) + 'px'
 }
 
 onMounted(() => {
@@ -117,27 +118,29 @@ onMounted(() => {
               </template>
             </div>
             <!-- Bars -->
-            <div class="flex items-end gap-4 px-4 h-52 w-full overflow-x-auto" style="margin-top:32px;">
+            <div class="flex items-end gap-4 px-4 h-64 w-full overflow-x-auto pt-8 pb-8" style="margin-top:48px;">
               <div
                 v-for="(item, idx) in graphData"
                 :key="idx"
                 class="flex flex-col items-center min-w-[48px]"
-                style="z-index:1"
+                style="z-index:1;"
               >
                 <div
                   :class="item.value > 0 ? 'bg-[#2F3367]' : 'bg-red-500'"
-                  class="w-8 rounded-t transition-all duration-300 flex items-end justify-center relative"
+                  class="w-8 rounded-t transition-all duration-300"
                   :style="{
-                    height: maxNominal > 0 ? (Math.abs(item.value) / maxNominal) * 180 + 'px' : '8px',
-                    minHeight: '8px'
+                    height: getBarHeight(item.value),
+                    minHeight: '8px',
+                    maxHeight: '200px'
                   }"
                   :title="item.value"
+                ></div>
+                <span
+                  class="text-xs mt-2 ml-4 mr-4 block"
+                  :class="item.value > 0 ? 'text-[#2F3367]' : 'text-red-500'"
                 >
-                  <span class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold"
-                    :class="item.value > 0 ? 'text-[#2F3367]' : 'text-red-500'">
-                    {{ item.value > 0 ? '+Rp' : '-Rp' }}{{ Math.abs(item.value).toLocaleString() }}
-                  </span>
-                </div>
+                  {{ item.value > 0 ? 'Rp' : 'Rp' }}{{ Math.abs(item.value).toLocaleString() }}
+                </span>
                 <span class="text-xs mt-2 text-gray-600 whitespace-nowrap">{{ item.label }}</span>
               </div>
             </div>
@@ -146,18 +149,18 @@ onMounted(() => {
         <!-- Cashflow Summary -->
         <div class="bg-white rounded-2xl shadow-lg p-8 min-h-[320px] flex flex-col justify-between">
           <h2 class="text-xl font-bold text-[#2F3367] mb-4">Ringkasan Cashflow</h2>
-          <div class="flex flex-col gap-4 text-lg">
+          <div class="flex flex-col gap-8 text-lg mb-4">
             <div class="flex justify-between">
               <span class="font-semibold text-[#2F3367]">Total Masuk</span>
-              <span class="font-bold text-[#2F3367]">IDR {{ cashIn.toLocaleString() }}</span>
+              <span class="font-bold text-[rgb(47,51,103)]">IDR {{ cashIn.toLocaleString() }}</span>
             </div>
             <div class="flex justify-between">
               <span class="font-semibold text-red-500">Total Keluar</span>
               <span class="font-bold text-red-500">IDR {{ cashOut.toLocaleString() }}</span>
             </div>
-            <div class="flex justify-between border-t pt-2 mt-2">
-              <span class="font-semibold">Saldo Akhir</span>
-              <span class="font-bold" :class="(cashIn-cashOut)>=0 ? 'text-[#2F3367]' : 'text-red-500'">
+            <div class="flex justify-between border-t pt-4 mt-2">
+              <span class="pt-4 font-semibold text-[#2F3367]">Saldo Akhir</span>
+              <span class="pt-4 font-bold" :class="(cashIn-cashOut)>=0 ? 'text-[#2F3367]' : 'text-red-500'">
                 IDR {{ (cashIn - cashOut).toLocaleString() }}
               </span>
             </div>
