@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
 import DashboardHeader from '../../components/DashboardHeader.vue'
 import router from '../../router';
@@ -28,16 +28,7 @@ const form = ref({
 })
 
 // List client aktif & riwayat
-const currentClients = ref([
-  {
-    id: 1,
-    name: 'Putra & Putri',
-    phone: '+62 811 1111 1111',
-    paket: 'A',
-    tanggal: '2025-05-25',
-    status: 'Berlangsung'
-  }
-])
+const currentClients = ref([])
 
 const clientHistory = ref([])
 
@@ -69,6 +60,30 @@ const updateClient = () => {
   }
   isEditing.value = false
 }
+
+async function fetchAcaraSaatIni() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/upcoming`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      alert('fetch event failed');
+    } else {
+      const data = await response.json();
+      currentClients.value = data.data
+    }
+  } catch (err) {
+    alert('error system')
+  }
+}
+
+
+onMounted(() => {
+  fetchAcaraSaatIni();
+});
 </script>
 
 <template>
@@ -103,12 +118,12 @@ const updateClient = () => {
             </thead>
             <tbody>
               <tr v-for="client in currentClients" :key="client.id" class="bg-gray-100 text-black">
-                <td class="px-4 py-2">{{ client.id }}</td>
-                <td class="px-4 py-2">{{ client.name }}</td>
-                <td class="px-4 py-2">{{ client.phone }}</td>
-                <td class="px-4 py-2">{{ client.paket }}</td>
-                <td class="px-4 py-2">{{ client.tanggal }}</td>
-                <td class="px-4 py-2">{{ client.status }}</td>
+                <td class="px-4 py-2">{{ client.reservation_id }}</td>
+                <td class="px-4 py-2">{{ client.combined_name }}</td>
+                <td class="px-4 py-2">{{ client.telephone_num }}</td>
+                <td class="px-4 py-2">{{ client.wedding_package }}</td>
+                <td class="px-4 py-2">{{ client.wedding_date }}</td>
+                <td class="px-4 py-2">{{ client.reservation_status }}</td>
                 <td class="px-4 py-2">
                   <!-- <button @click="startEdit(client)" class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
                     Edit

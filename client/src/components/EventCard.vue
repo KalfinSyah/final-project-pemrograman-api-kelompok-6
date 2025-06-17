@@ -17,7 +17,18 @@
       <h3 class="font-bold">Kegiatan Sekarang</h3>
       <div class="flex items-center mt-4">
         <span class="mr-8 font-semibold">{{ currentTask }}</span>
-        <span class="ml-2 px-4 py-1 rounded border text-xs font-semibold border-[#2F3367] text-[#2F3367] bg-white">{{ reservationStatus }}</span>
+        <span
+          v-if="reservation_status"
+          class="ml-2 px-4 py-1 rounded border text-xs font-semibold"
+          :class="{
+            'border-[#2F3367] text-[#2F3367] bg-white': reservation_status === 'Berlangsung',
+            'border-green-600 text-green-600 bg-white': reservation_status === 'Selesai',
+            'border-yellow-500 text-yellow-500 bg-white': reservation_status === 'Pending',
+            'border-red-500 text-red-500 bg-white': reservation_status === 'Batal'
+          }"
+        >
+          {{ reservation_status }}
+        </span>
       </div>
     </div>
   </div>
@@ -29,5 +40,7 @@ const props = defineProps({
   date: String,
   currentTask: String,
   taskDate: String,
-  location: String})
+  location: String,
+  reservation_status: String // <-- fetch and pass this from Dashboard.vue
+})
 </script>
