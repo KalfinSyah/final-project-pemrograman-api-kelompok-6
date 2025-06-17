@@ -113,12 +113,12 @@ const updateClient = () => {
                   <!-- <button @click="startEdit(client)" class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
                     Edit
                   </button> -->
-                  <button @click='router.push({name: "edit-acara"})' class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
+                  <button @click='router.push({name: "edit-acara", params: {
+                    
+                  }})' class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
                     Edit
                   </button>
-                  <button @click='router.push({name: "view-acara"})' class="bg-orange-500 text-white px-4 py-1 ml-4 rounded hover:bg-orange-600">
-                    View
-                  </button>
+                 
                 </td>
               </tr>
             </tbody>
