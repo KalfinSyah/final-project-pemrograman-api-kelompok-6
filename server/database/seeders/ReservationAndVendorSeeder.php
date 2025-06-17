@@ -52,7 +52,7 @@ class ReservationAndVendorSeeder extends Seeder
                 'cashflow_out' => 0,
                 'wedding_package' => 'B',
                 'wedding_date' => '2025-07-10',
-                'reservation_status' => 'Berlangsung',
+                'reservation_status' => 'Batal',
                 'combined_name' => 'Budi & Kartini',
                 'groom' => 'Budi Pekerti',
                 'bride' => 'Kartini Eka',

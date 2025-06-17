@@ -23,7 +23,8 @@ class Reservation extends Model
         'combined_name',
         'groom',
         'bride',
-        'telephone_num'
+        'telephone_num',
+        'wedding_location'
     ];
 
     public const PACKAGES = [
