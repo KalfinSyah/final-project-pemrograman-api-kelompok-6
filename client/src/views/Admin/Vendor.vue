@@ -1,8 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Sidebar from '../../components/Sidebar.vue'
 import DashboardHeader from '../../components/DashboardHeader.vue'
 
+// State
+const vendors = ref([])
 const showForm = ref(false)
 const showEditForm = ref(false)
 
@@ -17,42 +19,91 @@ const editForm = ref({
   name: '',
 })
 
-const vendors = ref([
-  {
-    id: 1,
-    type: 'Dekorasi',
-    name: 'Putra Decoration',
-  },
-])
+const token = localStorage.getItem('token') // Pastikan token disimpan setelah login
+const API_URL = 'http://localhost:8000/api/vendors' // Ganti dengan base URL API kamu
 
-// Tambah Vendor Baru
-const addVendor = () => {
-  const newVendor = { ...form.value, id: vendors.value.length + 1 }
-  vendors.value.push(newVendor)
-
-  // Reset form
-  form.value = {
-    type: '',
-    name: '',
+// GET data vendor dari API
+const fetchVendors = async () => {
+  try {
+    const res = await fetch(API_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    const data = await res.json()
+    vendors.value = data.data // Sesuaikan dengan struktur respons API
+  } catch (error) {
+    console.error('Gagal fetch vendors:', error)
   }
-
-  showForm.value = false
 }
 
-// Tampilkan Form Edit
+// POST - Tambah Vendor Baru
+const addVendor = async () => {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        vendor_type: form.value.type,
+        vendor_brand: form.value.name,
+      })
+    })
+    const data = await res.json()
+    if (res.ok) {
+      fetchVendors()
+      form.value = { type: '', name: '' }
+      showForm.value = false
+    } else {
+      alert('Gagal menambah vendor: ' + data.message)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// PUT - Simpan perubahan vendor
+const updateVendor = async () => {
+  try {
+    const res = await fetch(`${API_URL}/${editForm.value.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        vendor_type: editForm.value.type,
+        vendor_brand: editForm.value.name,
+      })
+    })
+    const data = await res.json()
+    if (res.ok) {
+      fetchVendors()
+      showEditForm.value = false
+    } else {
+      alert('Gagal update vendor: ' + data.message)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// Buka form edit
 const editVendor = (vendor) => {
-  editForm.value = { ...vendor }
+  editForm.value = {
+    id: vendor.id,
+    type: vendor.vendor_type,
+    name: vendor.vendor_brand
+  }
   showEditForm.value = true
 }
 
-// Simpan Perubahan Vendor
-const updateVendor = () => {
-  const index = vendors.value.findIndex(v => v.id === editForm.value.id)
-  if (index !== -1) {
-    vendors.value[index] = { ...editForm.value }
-  }
-  showEditForm.value = false
-}
+// onMounted
+onMounted(() => {
+  fetchVendors()
+})
 </script>
 
 <template>
@@ -76,21 +127,23 @@ const updateVendor = () => {
           <table class="min-w-full text-left border-separate border-spacing-y-2">
             <thead>
               <tr class="bg-[#2F3367] text-white">
-                <th class="px-4 py-2 rounded-l-lg">ID</th>
-                <th class="px-4 py-2">Type Vendor</th>
+                <th class="px-4 py-2 rounded-l-lg">No</th>
+                <th class="px-4 py-2">Tipe Vendor</th>
                 <th class="px-4 py-2">Nama Vendor</th>
                 <th class="px-4 py-2 rounded-r-lg">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="vendor in vendors" :key="vendor.id" class="bg-gray-100 text-black">
-                <td class="px-4 py-2">{{ vendor.id }}</td>
-                <td class="px-4 py-2">{{ vendor.type }}</td>
-                <td class="px-4 py-2">{{ vendor.name }}</td>
+              <tr v-for="(vendor, index) in vendors" :key="vendor.id" class="bg-gray-100 text-black">
+                <td class="px-4 py-2">{{ index + 1  }}</td>
+                <td class="px-4 py-2">{{ vendor.vendor_type }}</td>
+                <td class="px-4 py-2">{{ vendor.vendor_brand }}</td>
                 <td class="px-4 py-2">
-                <button @click="editVendor(vendor)" class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
+                  <button
+                    @click="editVendor(vendor)"
+                    class="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600">
                     Edit
-                </button>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -105,7 +158,7 @@ const updateVendor = () => {
         <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Tambah Vendor</h2>
         <form @submit.prevent="addVendor">
           <div class="mb-4">
-            <label class="block text-gray-700">Type Vendor</label>
+            <label class="block text-gray-700">Tipe Vendor</label>
             <input v-model="form.type" type="text" class="w-full border rounded px-3 py-2" required />
           </div>
           <div class="mb-4">
@@ -126,7 +179,7 @@ const updateVendor = () => {
         <h2 class="text-2xl font-bold text-[#2F3367] mb-4">Edit Vendor</h2>
         <form @submit.prevent="updateVendor">
           <div class="mb-4">
-            <label class="block text-gray-700">Type Vendor</label>
+            <label class="block text-gray-700">Tipe Vendor</label>
             <input v-model="editForm.type" type="text" class="w-full border rounded px-3 py-2" required />
           </div>
           <div class="mb-4">

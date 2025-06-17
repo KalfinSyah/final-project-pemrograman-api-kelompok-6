@@ -1,28 +1,84 @@
 <script setup>
 import Sidebar from '../../components/Sidebar.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-// Dummy transaction data
-const transactionHistory = [
-  { id: 1, tanggal: '2025-06-01', deskripsi: 'Pembayaran DP', jumlah: 1500000 },
-  { id: 2, tanggal: '2025-06-05', deskripsi: 'Pembayaran Vendor', jumlah: -500000 },
-  { id: 3, tanggal: '2025-06-10', deskripsi: 'Pembayaran Pelunasan', jumlah: 2000000 },
-  { id: 4, tanggal: '2025-06-12', deskripsi: 'Pembelian Dekorasi', jumlah: -750000 },
-]
+const transactionHistory = ref([])
 
+// --- Graph Data ---
+const graphRaw = ref({})
+const graphData = computed(() => {
+  // Flatten and sort by date
+  const arr = []
+  Object.entries(graphRaw.value).forEach(([bulan, items]) => {
+    items.forEach(item => {
+      arr.push({
+        ...item,
+        label: item.cashflow_date,
+        value: item.cashflow_type === 'Pendapatan'
+          ? Number(item.amount)
+          : -Number(item.amount)
+      })
+    })
+  })
+  // Sort by date ascending
+  return arr.sort((a, b) => new Date(a.label) - new Date(b.label))
+})
+
+// --- Cashflow Summary ---
 const cashIn = computed(() =>
-  transactionHistory.filter(t => t.jumlah > 0).reduce((sum, t) => sum + t.jumlah, 0)
+  transactionHistory.value.filter(t => t.jumlah > 0).reduce((sum, t) => sum + t.jumlah, 0)
 )
 const cashOut = computed(() =>
-  transactionHistory.filter(t => t.jumlah < 0).reduce((sum, t) => sum + Math.abs(t.jumlah), 0)
+  transactionHistory.value.filter(t => t.jumlah < 0).reduce((sum, t) => sum + Math.abs(t.jumlah), 0)
 )
 
-const graphData = [
-  { label: '1 Jun', value: 1500000 },
-  { label: '5 Jun', value: -500000 },
-  { label: '10 Jun', value: 2000000 },
-  { label: '12 Jun', value: -750000 },
-]
+// --- Fetch Graph Data ---
+async function fetchGraphData() {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/recentCashflows`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (!response.ok) throw new Error('Failed to fetch graph')
+    const data = await response.json()
+    graphRaw.value = data.data || {}
+  } catch (err) {
+    graphRaw.value = {}
+    console.error('Failed to fetch graph:', err)
+  }
+}
+
+// --- Fetch Transaction History ---
+async function fetchTransactions() {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL_API}/cashflows`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    if (!response.ok) throw new Error('Failed to fetch')
+    const data = await response.json()
+    transactionHistory.value = (data.data || []).map(trx => ({
+      id: trx.cashflow_id || trx.id,
+      tanggal: trx.cashflow_date,
+      deskripsi: trx.cashflow_desc,
+      jumlah: trx.cashflow_type === 'Pendapatan'
+        ? Number(trx.amount)
+        : -Number(trx.amount)
+    }))
+  } catch (err) {
+    transactionHistory.value = []
+    console.error('Failed to fetch transactions:', err)
+  }
+}
+
+onMounted(() => {
+  fetchGraphData()
+  fetchTransactions()
+})
 </script>
 
 <template>
@@ -34,15 +90,15 @@ const graphData = [
         <!-- Dummy Graph -->
         <div class="bg-white rounded-2xl shadow-lg p-8 min-h-[320px] flex flex-col justify-between">
           <h2 class="text-xl font-bold text-[#2F3367] mb-4">Grafik Cashflow</h2>
-          <div class="w-full h-64 flex items-end gap-4 px-4">
-            <div v-for="(item, idx) in graphData" :key="idx" class="flex flex-col items-center">
+          <div class="w-full h-64 flex items-end gap-4 px-4 overflow-x-auto" style="max-width:100%;">
+            <div v-for="(item, idx) in graphData" :key="idx" class="flex flex-col items-center min-w-[48px]">
               <div
                 :class="item.value > 0 ? 'bg-[#2F3367]' : 'bg-red-500'"
                 class="w-8 rounded-t transition-all duration-300"
-                :style="{ height: Math.abs(item.value) / 20000 + 'px' }"
+                :style="{ height: Math.abs(item.value) / 20000 + 'px', minHeight: '8px' }"
                 :title="item.value"
               ></div>
-              <span class="text-xs mt-2 text-gray-600">{{ item.label }}</span>
+              <span class="text-xs mt-2 text-gray-600 whitespace-nowrap">{{ item.label }}</span>
             </div>
           </div>
         </div>
