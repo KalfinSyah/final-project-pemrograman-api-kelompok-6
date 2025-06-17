@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\CashflowResource;
+use App\Http\Resources\CashflowGroupResource;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 
 class CashflowController extends Controller
@@ -136,5 +138,13 @@ class CashflowController extends Controller
         return response()->json([
             'message' => 'Cashflow deleted successfully.'
         ]);
+    }
+
+    public function recentCashflows()
+    {
+        $startDate = now()->subMonths(3)->startOfMonth();
+        $cashflows = Cashflow::where('cashflow_date', '>=', $startDate)->get();
+
+        return new CashflowGroupResource($cashflows);
     }
 }
