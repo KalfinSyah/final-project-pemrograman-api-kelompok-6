@@ -1,5 +1,6 @@
 <script setup>
   import { onMounted, ref } from 'vue'
+  import Sidebar from '../../components/Sidebar.vue'
   import {useRoute} from "vue-router";
   import Swal from 'sweetalert2'
 
@@ -311,7 +312,9 @@ onMounted(() => {
 </script>
 
 <template>
+<div class="bg-[#e8eaf6] min-h-screen">
   <div class="max-w-4xl mx-auto p-6 space-y-8">
+  <Sidebar />
     <!-- Back Button -->
     <button
       @click="$router.push('/acara')"
@@ -647,6 +650,6 @@ onMounted(() => {
     </div>
   </div>
 </div>
-
+</div>
   </div>
 </template>
