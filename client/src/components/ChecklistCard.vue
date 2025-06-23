@@ -21,9 +21,9 @@
         <div class="h-3 bg-[#2F3367] rounded-full" :style="{ width: progressBar + '%' }"></div>
       </div>
     </div>
-    <button class="mt-4 px-4 py-2 border rounded text-[#2F3367] border-[#2F3367] bg-white hover:bg-[#e8eaf6] text-sm font-semibold self-end">
+    <!-- <button class="mt-4 px-4 py-2 border rounded text-[#2F3367] border-[#2F3367] bg-white hover:bg-[#e8eaf6] text-sm font-semibold self-end">
       Tambah Kegiatan
-    </button>
+    </button> -->
   </div>
 </template>
 

@@ -44,13 +44,13 @@ function handleLogout() {
       </router-link>
     </nav>
     <div class="mt-auto mb-4 flex flex-col space-y-2">
-      <router-link
+      <!-- <router-link
         to="/pengaturan"
         class="flex items-center px-4 py-2 rounded transition"
         :class="route.path === '/pengaturan' ? 'bg-white text-[#2F3367] font-semibold shadow' : 'hover:bg-[#404488]'"
       >
         <span class="mr-2">⚙️</span> Pengaturan
-      </router-link>
+      </router-link> -->
       <router-link
         to="/"
         class="flex items-center px-4 py-2 rounded transition hover:bg-[#404488]"
